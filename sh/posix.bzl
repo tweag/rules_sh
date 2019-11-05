@@ -1,8 +1,9 @@
 """Unix shell commands toolchain support.
 
-Defines a toolchain capturing common Unix shell commands, see `unix_toolchain`,
-and `unix_configure` to scan the local environment for shell commands. The list
-of known commands is available in `unix.commands`.
+Defines a toolchain capturing common Unix shell commands as defined by IEEE
+1003.1-2008 (POSIX), see `sh_posix_toolchain`, and `sh_posix_configure` to scan
+the local environment for shell commands. The list of known commands is
+available in `posix.commands`.
 
 """
 
@@ -175,10 +176,10 @@ _commands = [
     "zcat",
 ]
 
-TOOLCHAIN_TYPE = "@rules_sh//sh/unix:toolchain_type"
-MAKE_VARIABLES = "@rules_sh//sh/unix:make_variables"
+TOOLCHAIN_TYPE = "@rules_sh//sh/posix:toolchain_type"
+MAKE_VARIABLES = "@rules_sh//sh/posix:make_variables"
 
-def _unix_toolchain_impl(ctx):
+def _sh_posix_toolchain_impl(ctx):
     commands = {}
     for cmd in _commands:
         cmd_path = getattr(ctx.attr, cmd, None)
@@ -195,7 +196,7 @@ def _unix_toolchain_impl(ctx):
         paths = cmd_paths,
     )]
 
-unix_toolchain = rule(
+sh_posix_toolchain = rule(
     attrs = {
         cmd: attr.string(
             doc = "Absolute path to the {} command.".format(cmd),
@@ -210,66 +211,66 @@ Provides:
   commands: Dict of String, an item per command holding the path to the executable or None.
   paths: List of String, deduplicated bindir paths. Suitable for generating `$PATH`.
 
-Use `unix_configure` to create an instance of this toolchain.
-See `unix_make_variables` on how to use this toolchain in genrules.
+Use `sh_posix_configure` to create an instance of this toolchain.
+See `sh_posix_make_variables` on how to use this toolchain in genrules.
 """,
-    implementation = _unix_toolchain_impl,
+    implementation = _sh_posix_toolchain_impl,
 )
 
-def _unix_make_variables_impl(ctx):
+def _sh_posix_make_variables_impl(ctx):
     toolchain = ctx.toolchains[TOOLCHAIN_TYPE]
     cmd_vars = {
-        "UNIX_%s" % cmd.upper(): cmd_path
+        "POSIX_%s" % cmd.upper(): cmd_path
         for cmd in _commands
         for cmd_path in [toolchain.commands[cmd]]
         if cmd_path
     }
     return [platform_common.TemplateVariableInfo(cmd_vars)]
 
-unix_make_variables = rule(
+sh_posix_make_variables = rule(
     doc = """
-Provides Unix toolchain commands as custom make variables.
+Provides POSIX toolchain commands as custom make variables.
 
 Make variables:
-  Provides a make variable of the form `UNIX_<COMMAND>` for each available
+  Provides a make variable of the form `POSIX_<COMMAND>` for each available
   command, where `<COMMAND>` is the name of the command in upper case.
 
-Use `unix.MAKE_VARIABLES` instead of instantiating this rule yourself.
+Use `posix.MAKE_VARIABLES` instead of instantiating this rule yourself.
 
 Example:
   >>> genrule(
           name = "use-grep",
           srcs = [":some-file"],
           outs = ["grep-out"],
-          cmd = "$(UNIX_GREP) search $(execpath :some-file) > $(OUTS)",
-          toolchains = [unix.MAKE_VARIABLES],
+          cmd = "$(POSIX_GREP) search $(execpath :some-file) > $(OUTS)",
+          toolchains = [posix.MAKE_VARIABLES],
       )
 """,
-    implementation = _unix_make_variables_impl,
+    implementation = _sh_posix_make_variables_impl,
     toolchains = [TOOLCHAIN_TYPE],
 )
 
-def _unix_config_impl(repository_ctx):
+def _sh_posix_config_impl(repository_ctx):
     cpu = get_cpu_value(repository_ctx)
     env = repository_ctx.os.environ
     commands = {}
     for cmd in _commands:
-        cmd_path = env.get("UNIX_%s" % cmd.upper(), None)
+        cmd_path = env.get("POSIX_%s" % cmd.upper(), None)
         if cmd_path == None:
             cmd_path = repository_ctx.which(cmd)
         if cmd_path == None and cpu == "x64_windows":
             cmd_path = repository_ctx.which(cmd + ".exe")
         commands[cmd] = cmd_path
     repository_ctx.file("BUILD.bazel", executable = False, content = """
-load("@rules_sh//sh:unix.bzl", "unix_toolchain")
-unix_toolchain(
-    name = "local_unix",
+load("@rules_sh//sh:posix.bzl", "sh_posix_toolchain")
+sh_posix_toolchain(
+    name = "local_posix",
     visibility = ["//visibility:public"],
     {commands}
 )
 toolchain(
-    name = "local_unix_toolchain",
-    toolchain = ":local_unix",
+    name = "local_posix_toolchain",
+    toolchain = ":local_posix",
     toolchain_type = "{toolchain_type}",
     exec_compatible_with = [
         "@bazel_tools//platforms:x86_64",
@@ -293,30 +294,30 @@ toolchain(
         toolchain_type = TOOLCHAIN_TYPE,
     ))
 
-_unix_config = repository_rule(
+_sh_posix_config = repository_rule(
     configure = True,
     environ = ["PATH"] + [
-        "UNIX_%s" % cmd.upper()
+        "POSIX_%s" % cmd.upper()
         for cmd in _commands
     ],
     local = True,
-    implementation = _unix_config_impl,
+    implementation = _sh_posix_config_impl,
 )
 
-def unix_configure(name = "local_unix_config"):
+def sh_posix_configure(name = "local_posix_config"):
     """Autodetect local Unix commands.
 
     Scans the environment (`$PATH`) for standard shell commands, generates a
-    corresponding unix toolchain and registers the toolchain.
+    corresponding POSIX toolchain and registers the toolchain.
 
     You can override the autodetection for individual commands by setting
-    environment variables of the form `UNIX_<COMMAND>`. E.g.
-    `UNIX_MAKE=/usr/bin/gmake` will override the make command.
+    environment variables of the form `POSIX_<COMMAND>`. E.g.
+    `POSIX_MAKE=/usr/bin/gmake` will override the make command.
     """
-    _unix_config(name = name)
-    native.register_toolchains("@{}//:local_unix_toolchain".format(name))
+    _sh_posix_config(name = name)
+    native.register_toolchains("@{}//:local_posix_toolchain".format(name))
 
-unix = struct(
+posix = struct(
     commands = _commands,
     TOOLCHAIN_TYPE = TOOLCHAIN_TYPE,
     MAKE_VARIABLES = MAKE_VARIABLES,

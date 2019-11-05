@@ -1,11 +1,11 @@
-load("//sh:unix.bzl", "unix_make_variables")
+load("//sh:posix.bzl", "sh_posix_make_variables")
 
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//visibility:public"],
 )
 
-unix_make_variables(
+sh_posix_make_variables(
     name = "make_variables",
     visibility = ["//visibility:public"],
 )
