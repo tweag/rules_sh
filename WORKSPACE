@@ -4,9 +4,9 @@ load("//sh:repositories.bzl", "rules_sh_dependencies")
 
 rules_sh_dependencies()
 
-load("//sh:unix.bzl", "unix_configure")
+load("//sh:posix.bzl", "sh_posix_configure")
 
-unix_configure()
+sh_posix_configure()
 
 load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
 
