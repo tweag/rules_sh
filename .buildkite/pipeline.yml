@@ -1,5 +1,4 @@
 steps:
   - label: "Run tests"
-    command: |
-      bazel test //...
+    command: .buildkite/run-pipeline
     timeout: 30
