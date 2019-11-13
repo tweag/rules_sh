@@ -4,7 +4,12 @@ This project extends Bazel with a toolchain for common shell commands.
 
 ## Setup
 
-Add the following to your `WORKSPACE` file to install `rules_sh`:
+See the **WORKSPACE setup** section of the [current release][releases].
+
+[releases]: https://github.com/tweag/rules_sh/releases
+
+Or use the following template in your `WORKSPACE` file to install a development
+version of `rules_sh`:
 
 ``` python
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
