@@ -10,3 +10,10 @@ def rules_sh_dependencies():
         strip_prefix = "bazel-skylib-1.0.2",
         urls = ["https://github.com/bazelbuild/bazel-skylib/archive/1.0.2.tar.gz"],
     )
+    maybe(
+        http_archive,
+        "platforms",
+        sha256 = "23566db029006fe23d8140d14514ada8c742d82b51973b4d331ee423c75a0bfa",
+        strip_prefix = "platforms-46993efdd33b73649796c5fc5c9efb193ae19d51",
+        urls = ["https://github.com/bazelbuild/platforms/archive/46993efdd33b73649796c5fc5c9efb193ae19d51.tar.gz"],
+    )
