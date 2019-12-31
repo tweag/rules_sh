@@ -306,12 +306,12 @@ toolchain(
     toolchain = ":local_posix",
     toolchain_type = "{toolchain_type}",
     exec_compatible_with = [
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//platforms:{os}",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:{os}",
     ],
     target_compatible_with = [
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//platforms:{os}",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:{os}",
     ],
 )
 """.format(
