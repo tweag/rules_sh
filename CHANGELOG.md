@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.1.1...HEAD
+
+## [0.1.1] - 2019-11-13
+
+[0.1.1]: https://github.com/tweag/rules_sh/compare/v0.1.0...v0.1.1
+
+### Changed
+
+- Avoid finding non-POSIX compliant tools in `sh_posix_configure` on Windows.
+  See [#7][#7].
+
+[#7]: https://github.com/tweag/rules_sh/pull/7
 
 ## [0.1.0] - 2019-11-13
 
