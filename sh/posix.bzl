@@ -181,8 +181,9 @@ MAKE_VARIABLES = "@rules_sh//sh/posix:make_variables"
 
 def _sh_posix_toolchain_impl(ctx):
     commands = {}
+    cmds = getattr(ctx.attr, "cmds", {})
     for cmd in _commands:
-        cmd_path = getattr(ctx.attr, cmd, None)
+        cmd_path = cmds.get(cmd, None)
         if not cmd_path:
             cmd_path = None
         commands[cmd] = cmd_path
@@ -198,11 +199,10 @@ def _sh_posix_toolchain_impl(ctx):
 
 sh_posix_toolchain = rule(
     attrs = {
-        cmd: attr.string(
-            doc = "Absolute path to the {} command.".format(cmd),
+        "cmds": attr.string_dict(
+            doc = "dict where keys are command names and values are paths",
             mandatory = False,
         )
-        for cmd in _commands
     },
     doc = """
 A toolchain capturing standard Unix shell commands.
@@ -300,7 +300,9 @@ load("@rules_sh//sh:posix.bzl", "sh_posix_toolchain")
 sh_posix_toolchain(
     name = "local_posix",
     visibility = ["//visibility:public"],
-    {commands}
+    cmds = {{
+        {commands}
+    }}
 )
 toolchain(
     name = "local_posix_toolchain",
@@ -316,8 +318,8 @@ toolchain(
     ],
 )
 """.format(
-        commands = ",\n    ".join([
-            '{cmd} = "{path}"'.format(cmd = cmd, path = cmd_path)
+        commands = ",\n        ".join([
+            '"{cmd}": "{path}"'.format(cmd = cmd, path = cmd_path)
             for (cmd, cmd_path) in commands.items()
             if cmd_path
         ]),
