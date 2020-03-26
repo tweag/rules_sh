@@ -1,6 +1,6 @@
 # Maintenance instructions
 
-# Cutting a new release
+## Cutting a new release
 
 - Create a dedicated branch: `release-<version>` (e.g. `release-0.2.0`)
 - Check the changes since the last release by

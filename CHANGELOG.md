@@ -42,7 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 [#14]: https://github.com/tweag/rules_sh/pull/14
 [#13]: https://github.com/tweag/rules_sh/issues/13
-[#11]: https://github.com/tweag/rules_sh/pull/13
+[#11]: https://github.com/tweag/rules_sh/pull/11
 [skydoc_deprecation]: https://github.com/bazelbuild/stardoc/blob/master/docs/skydoc_deprecation.md#starlark-dependencies
 
 ## [0.1.1] - 2019-11-13
