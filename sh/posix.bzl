@@ -181,7 +181,7 @@ MAKE_VARIABLES = "@rules_sh//sh/posix:make_variables"
 
 def _sh_posix_toolchain_impl(ctx):
     commands = {}
-    cmds = getattr(ctx.attr, "cmds", {})
+    cmds = ctx.attr.cmds
     for cmd in _commands:
         cmd_path = cmds.get(cmd, None)
         if not cmd_path:
@@ -201,7 +201,7 @@ sh_posix_toolchain = rule(
     attrs = {
         "cmds": attr.string_dict(
             doc = "dict where keys are command names and values are paths",
-            mandatory = False,
+            mandatory = True,
         )
     },
     doc = """
