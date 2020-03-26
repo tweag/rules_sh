@@ -8,6 +8,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 [Unreleased]: https://github.com/tweag/rules_sh/compare/v0.1.1...HEAD
 
+### Changed
+
+- `sh_posix_toolchain` now has a single attribute `cmds`, which
+  is a string to string `dict`; instead of having one attribute
+  per member of `posix.commands`. It is a breaking change if you were
+  calling `sh_posix_toolchain` directly.
+
+  If you were calling this rule as follows:
+
+  ```
+  sh_posix_toolchain(cat = "/bin/cat", wc = "/usr/bin/wc")
+  ```
+
+  you should now do:
+
+  ```
+  sh_posix_toolchain(cmds = { "cat": "/bin/cat", "wc": "/usr/bin/wc" })
+  ```
+
+  See PR [#14][#14] and issue [#13][#13] for the motivation.
+
+[#14]: https://github.com/tweag/rules_sh/pull/14
+[#13]: https://github.com/tweag/rules_sh/issues/13
+
 ## [0.1.1] - 2019-11-13
 
 [0.1.1]: https://github.com/tweag/rules_sh/compare/v0.1.0...v0.1.1
