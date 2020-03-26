@@ -6,7 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.2.0...HEAD
+
+## [0.2.0] - 2020-03-26
+
+[0.2.0]: https://github.com/tweag/rules_sh/compare/v0.1.1...v0.2.0
+
+### Added
+
+- Define appropriate `bzl_library` rules, so that rules that
+  depend `rules_sh` can generate `Stardoc` documentation.
+  See PR [#11][#11] and [Skydoc's deprecation][skydoc_deprecation]
+  for the motivation.
 
 ### Changed
 
@@ -31,6 +42,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 [#14]: https://github.com/tweag/rules_sh/pull/14
 [#13]: https://github.com/tweag/rules_sh/issues/13
+[#11]: https://github.com/tweag/rules_sh/pull/11
+[skydoc_deprecation]: https://github.com/bazelbuild/stardoc/blob/master/docs/skydoc_deprecation.md#starlark-dependencies
 
 ## [0.1.1] - 2019-11-13
 
