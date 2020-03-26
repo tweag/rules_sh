@@ -187,6 +187,9 @@ def _sh_posix_toolchain_impl(ctx):
         if not cmd_path:
             cmd_path = None
         commands[cmd] = cmd_path
+    unrecognizeds = [cmd for cmd in cmds.keys() if cmd not in _commands]
+    if unrecognizeds:
+        fail("Unrecognized commands in keys of sh_posix_toolchain's \"cmds\" attributes: {}. See _commands in posix.bzl for the list of recognized commands.".format(", ".join(unrecognizeds)))
     cmd_paths = {
         paths.dirname(cmd_path): None
         for cmd_path in commands.values()
