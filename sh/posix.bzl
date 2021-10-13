@@ -315,10 +315,6 @@ toolchain(
         "@platforms//cpu:x86_64",
         "@platforms//os:{os}",
     ],
-    target_compatible_with = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:{os}",
-    ],
 )
 """.format(
         commands = ",\n        ".join([
