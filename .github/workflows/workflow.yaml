@@ -1,0 +1,37 @@
+name: Continuous integration
+on: [push]
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazelbuild/setup-bazelisk@v1
+      - name: Configure
+        env:
+          BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
+        run: |
+          cat >.bazelrc.local <<EOF
+          build:ci --remote_header=x-buildbuddy-api-key="$BUILDBUDDY_API_KEY"
+          build --config=ci
+          EOF
+          cat >~/.netrc <<EOF
+          machine api.github.com
+                  password ${{ secrets.GITHUB_TOKEN }}
+          EOF
+      - name: Build & Test
+        run: |
+          if [[ ${{ runner.os }} == Windows ]]; then
+            # On Windows `//...` expands to `/...`.
+            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///...
+          else
+            bazel test //...
+          fi
