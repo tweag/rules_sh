@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: automatic merge
     conditions:
-      - "status-success=buildkite/rules-sh"
+      - "check-success=Build & Test"
       - "#approved-reviews-by>=1"
       - "label=merge-queue"
       - "base=master"
