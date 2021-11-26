@@ -1,3 +1,10 @@
+queue_rules:
+  - name: default
+    conditions:
+      - 'check-success~=Build & Test \(ubuntu-.*\)'
+      - 'check-success~=Build & Test \(macos-.*\)'
+      - 'check-success~=Build & Test \(windows-.*\)'
+ 
 pull_request_rules:
   - name: automatic merge
     conditions:
@@ -8,10 +15,9 @@ pull_request_rules:
       - "label=merge-queue"
       - "base=master"
     actions:
-      merge:
+      queue:
+        name: default
         method: merge
-        strict: smart
-        strict_method: rebase
 
   - name: delete head branch after merge
     conditions:
