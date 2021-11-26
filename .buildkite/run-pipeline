@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
-BAZEL_DIR="$("$DIR/fetch-bazel-bindist")"
-trap "rm -rf '$BAZEL_DIR'" EXIT
-export PATH="$BAZEL_DIR:$PATH"
-
-bazel test //...
