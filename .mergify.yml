@@ -1,7 +1,9 @@
 pull_request_rules:
   - name: automatic merge
     conditions:
-      - "check-success=Build & Test"
+      - 'check-success~=Build & Test \(ubuntu-.*\)'
+      - 'check-success~=Build & Test \(macos-.*\)'
+      - 'check-success~=Build & Test \(windows-.*\)'
       - "#approved-reviews-by>=1"
       - "label=merge-queue"
       - "base=master"
