@@ -2,8 +2,8 @@
 
 ## Cutting a new release
 
-- Create a dedicated branch: `release-<version>` (e.g. `release-0.2.0`)
-- Check the changes since the last release by
+* Create a dedicated branch: `release-<version>` (e.g. `release-0.2.0`)
+* Check the changes since the last release by
   [comparing the heads](https://github.com/tweag/rules_sh/compare/v0.2.0...HEAD),
   add anything relevant to `CHANGELOG.md`,
   and update the version heading and unreleased heading in `CHANGELOG.md`.
