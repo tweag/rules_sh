@@ -205,7 +205,7 @@ sh_posix_toolchain = rule(
         "cmds": attr.string_dict(
             doc = "dict where keys are command names and values are paths",
             mandatory = True,
-        )
+        ),
     },
     doc = """
 A toolchain capturing standard Unix shell commands.
