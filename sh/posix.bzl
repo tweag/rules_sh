@@ -205,7 +205,7 @@ sh_posix_toolchain = rule(
         "cmds": attr.string_dict(
             doc = "dict where keys are command names and values are paths",
             mandatory = True,
-        )
+        ),
     },
     doc = """
 A toolchain capturing standard Unix shell commands.
@@ -339,7 +339,7 @@ _sh_posix_config = repository_rule(
     implementation = _sh_posix_config_impl,
 )
 
-def sh_posix_configure(name = "local_posix_config"):
+def sh_posix_configure(name = "local_posix_config", register = True):
     """Autodetect local Unix commands.
 
     Scans the environment (`$PATH`) for standard shell commands, generates a
@@ -350,7 +350,8 @@ def sh_posix_configure(name = "local_posix_config"):
     `POSIX_MAKE=/usr/bin/gmake` will override the make command.
     """
     _sh_posix_config(name = name)
-    native.register_toolchains("@{}//:local_posix_toolchain".format(name))
+    if register:
+        native.register_toolchains("@{}//:local_posix_toolchain".format(name))
 
 posix = struct(
     commands = _commands,

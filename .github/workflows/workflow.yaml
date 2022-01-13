@@ -8,6 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        bzlmod: [workspace, module]
     defaults:
       run:
         shell: bash
@@ -27,6 +28,15 @@ jobs:
           machine api.github.com
                   password ${{ secrets.GITHUB_TOKEN }}
           EOF
+          if [[ ${{ matrix.bzlmod }} == module ]]; then
+            # Test with bzlmod enabled.
+            # Requires https://github.com/bazelbuild/bazel/commit/302971e1b3d803069ac949c0085c0d2a3916c8ab,
+            # see https://github.com/bazelbuild/bazel-central-registry/pull/47#issuecomment-998883652
+            echo USE_BAZEL_VERSION=302971e1b3d803069ac949c0085c0d2a3916c8ab >.bazeliskrc
+            cat >>.bazelrc.local <<-EOF
+          	build --experimental_enable_bzlmod
+          	EOF
+          fi
       - name: Build & Test
         run: |
           if [[ ${{ runner.os }} == Windows ]]; then
