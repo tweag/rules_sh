@@ -312,7 +312,7 @@ toolchain(
     toolchain = ":local_posix",
     toolchain_type = "{toolchain_type}",
     exec_compatible_with = [
-        "@platforms//cpu:x86_64",
+        "@platforms//cpu:{arch}",
         "@platforms//os:{os}",
     ],
 )
@@ -322,9 +322,15 @@ toolchain(
             for (cmd, cmd_path) in commands.items()
             if cmd_path
         ]),
+        arch = {
+            "darwin_arm64": "arm64",
+            "arm64_windows": "arm64",
+        }.get(cpu, "x86_64"),
         os = {
             "darwin": "osx",
+            "darwin_arm64": "osx",
             "x64_windows": "windows",
+            "arm64_windows": "windows",
         }.get(cpu, "linux"),
         toolchain_type = TOOLCHAIN_TYPE,
     ))
