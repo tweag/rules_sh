@@ -256,11 +256,12 @@ load("@rules_sh//sh:sh.bzl", "ShBinariesInfo")
 
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (_, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
+    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
 
     # Use binary-a in a `run` action.
     ctx.actions.run(
         executable = tools.executables["binary-a"], # Invoke binary-a
+        inputs = tools_inputs,
         input_manifests = tools_manifest,
         ...
     )
@@ -275,6 +276,7 @@ def _custom_rule_impl(ctx):
             tools.executables["binary-a"],
             tools.executables["binary-b"],
         ],
+        inputs = tools_inputs,
         input_manifests = tools_manifest,
         ...
     )
@@ -288,6 +290,7 @@ def _custom_rule_impl(ctx):
             tools.executables["binary-a"],
             tools.executables["binary-b"],
         ],
+        inputs = tools_inputs,
         input_manifests = tools_manifest,
         ...
     )
@@ -323,7 +326,7 @@ And in a custom rule as follows:
 ```bzl
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (_, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
+    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
     # The explicit RUNFILES_DIR/RUNFILES_MANIFEST_FILE is a workaround for
     # https://github.com/bazelbuild/bazel/issues/15486
     tools_env = {
@@ -334,6 +337,7 @@ def _custom_rule_impl(ctx):
     ctx.actions.run(
         executable = tools.executables["binary-a"],
         env = tools_env, # Pass the environment into the action.
+        inputs = tools_inputs,
         input_manifests = tools_manifest,
         ...
     )

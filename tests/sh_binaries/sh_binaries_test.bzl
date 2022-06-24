@@ -466,7 +466,7 @@ def _test_merge_bundles():
 
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (_, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
+    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
 
     # Override the argv[0] relative runfiles tree or manifest by the bundle's.
     # This is a workaround for https://github.com/bazelbuild/bazel/issues/15486
@@ -478,6 +478,7 @@ def _custom_rule_impl(ctx):
     output_run = ctx.actions.declare_file("custom_rule_run_output")
     ctx.actions.run(
         outputs = [output_run],
+        inputs = tools_inputs,
         executable = tools.executables["hello_data"],
         arguments = [output_run.path],
         mnemonic = "RunExecutableWithBundle",
@@ -489,6 +490,7 @@ def _custom_rule_impl(ctx):
     output_run_shell = ctx.actions.declare_file("custom_rule_run_shell_output")
     ctx.actions.run_shell(
         outputs = [output_run_shell],
+        inputs = tools_inputs,
         tools = [
             tools.executables["hello_world"],
             tools.executables["hello_data"],
