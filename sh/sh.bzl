@@ -303,6 +303,10 @@ imposed by Bazel's Starlark API, see [#15486][issue-15486]. In order for these
 to work you will need to define the `RUNFILES_DIR` or `RUNFILES_MANIFEST_FILE`
 environment variables for the action using tools from the bundle.
 
+(Use `RUNFILES_MANIFEST_FILE` if your operating system and configuration does
+not support a runfiles tree and instead only provides a runfiles manifest file,
+as is commonly the case on Windows.)
+
 You can achieve this in a `genrule` as follows:
 
 ```bzl
