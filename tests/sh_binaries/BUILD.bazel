@@ -1,0 +1,3 @@
+load(":sh_binaries_test.bzl", "sh_binaries_test_suite")
+
+sh_binaries_test_suite(name = "sh_binaries_test")
