@@ -102,7 +102,8 @@ def _bundle_binary_with_data_test_impl(ctx):
 
     asserts.equals(
         env,
-        5,
+        # On Windows the runfiles will contain both hello_data and hello_data.exe.
+        6 if ctx.attr.is_windows else 5,
         len(bundle_default_info.default_runfiles.files.to_list()),
         "Expected a runfiles set with five items",
     )
@@ -135,6 +136,7 @@ bundle_binary_with_data_test = analysistest.make(
             cfg = "target",
             doc = "The binary with data contained in the bundle. Used for reference.",
         ),
+        "is_windows": attr.bool(),
     },
 )
 
@@ -148,6 +150,10 @@ def _test_binary_with_data():
         name = "bundle_binary_with_data_test",
         target_under_test = ":bundle_binary_with_data",
         reference = ":hello_data",
+        is_windows = select({
+            "@platforms//os:windows": True,
+            "//conditions:default": False,
+        }),
     )
 
 # empty bundle with data #############################################
@@ -566,17 +572,28 @@ def _test_genrule():
         cmd = """\
 $(GENRULE_BUNDLE_HELLO_WORLD) >$(execpath genrule_output_world)
 
-# The explicit RUNFILES_DIR is a workaround for
-# https://github.com/bazelbuild/bazel/issues/15486
-RUNFILES_DIR=$(execpath :genrule_bundle).runfiles \\
-$(GENRULE_BUNDLE_HELLO_DATA) >$(execpath genrule_output_data)
+IS_WINDOWS=
+case "$$OSTYPE" in
+  cygwin|msys|win32) IS_WINDOWS=1;;
+esac
+
+with_runfiles() {
+  # The explicit RUNFILES_DIR|RUNFILES_MANIFEST_FILE is a workaround for
+  # https://github.com/bazelbuild/bazel/issues/15486
+  if [[ -n $$IS_WINDOWS ]]; then
+    RUNFILES_MANIFEST_FILE=$(execpath :genrule_bundle).runfiles_manifest \\
+      eval "$$@"
+  else
+    RUNFILES_DIR=$(execpath :genrule_bundle).runfiles \\
+      eval "$$@"
+  fi
+}
+
+with_runfiles $(GENRULE_BUNDLE_HELLO_DATA) >$(execpath genrule_output_data)
 
 PATH="$(_GENRULE_BUNDLE_PATH):$$PATH"
 hello_world >$(execpath genrule_output_by_path)
-# The explicit RUNFILES_DIR is a workaround for
-# https://github.com/bazelbuild/bazel/issues/15486
-RUNFILES_DIR=$(execpath :genrule_bundle).runfiles \\
-hello_data >>$(execpath genrule_output_by_path)
+with_runfiles hello_data >>$(execpath genrule_output_by_path)
 """,
         toolchains = [":genrule_bundle"],
     )
