@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 [Unreleased]: https://github.com/tweag/rules_sh/compare/v0.2.0...HEAD
 
+### Added
+
+- The new `sh_binaries` rule can bundle multiple executable files tracked by
+  Bazel into a single target that can be used in a genrule or a custom rule to
+  access those tools, either through make variables in a genrule, or through
+  the `ShBinariesInfo` provider.
+  See [issue #19][#19].
+
+[#19]: https://github.com/tweag/rules_sh/issues/19
+
 ## [0.2.0] - 2020-03-26
 
 [0.2.0]: https://github.com/tweag/rules_sh/compare/v0.1.1...v0.2.0
