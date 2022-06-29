@@ -898,6 +898,90 @@ def _test_override_deps():
         reference = ":override_deps_bin_2",
     )
 
+# Windows strip exe ##################################################
+
+def _windows_strip_exe_test_impl(ctx):
+    env = analysistest.begin(ctx)
+
+    bundle_under_test = analysistest.target_under_test(env)
+    bundle_binaries_info = bundle_under_test[ShBinariesInfo]
+
+    asserts.true(
+        env,
+        "empty" in bundle_binaries_info.executables,
+    )
+
+    return analysistest.end(env)
+
+windows_strip_exe_test = analysistest.make(
+    _windows_strip_exe_test_impl,
+    config_settings = {
+        "//command_line_option:platforms": "//tests/sh_binaries:windows",
+    },
+    # TODO[AH] The target_under_test should be provided in the exec
+    # configuration to be sure that the Windows platform check considers the
+    # correct platform, i.e. the execute platform in tools use-cases.
+    # See https://github.com/bazelbuild/bazel-skylib/issues/377
+)
+
+def _test_windows_strip_exe():
+    native.platform(
+        name = "windows",
+        constraint_values = [
+            "@platforms//os:windows",
+        ],
+    )
+    sh_binaries(
+        name = "windows_strip_exe",
+        srcs = ["empty.exe"],
+    )
+    windows_strip_exe_test(
+        name = "windows_strip_exe_test",
+        target_under_test = ":windows_strip_exe",
+    )
+
+# Linux keep exe #####################################################
+
+def _linux_keep_exe_test_impl(ctx):
+    env = analysistest.begin(ctx)
+
+    bundle_under_test = analysistest.target_under_test(env)
+    bundle_binaries_info = bundle_under_test[ShBinariesInfo]
+
+    asserts.true(
+        env,
+        "empty.exe" in bundle_binaries_info.executables,
+    )
+
+    return analysistest.end(env)
+
+linux_keep_exe_test = analysistest.make(
+    _linux_keep_exe_test_impl,
+    config_settings = {
+        "//command_line_option:platforms": "//tests/sh_binaries:linux",
+    },
+    # TODO[AH] The target_under_test should be provided in the exec
+    # configuration to be sure that the Windows platform check considers the
+    # correct platform, i.e. the execute platform in tools use-cases.
+    # See https://github.com/bazelbuild/bazel-skylib/issues/377
+)
+
+def _test_linux_keep_exe():
+    native.platform(
+        name = "linux",
+        constraint_values = [
+            "@platforms//os:linux",
+        ],
+    )
+    sh_binaries(
+        name = "linux_keep_exe",
+        srcs = ["empty.exe"],
+    )
+    linux_keep_exe_test(
+        name = "linux_keep_exe_test",
+        target_under_test = ":linux_keep_exe",
+    )
+
 # test suite #########################################################
 
 def sh_binaries_test_suite(name):
@@ -916,6 +1000,8 @@ def sh_binaries_test_suite(name):
     _test_name_collision()
     _test_override_srcs()
     _test_override_deps()
+    _test_windows_strip_exe()
+    _test_linux_keep_exe()
 
     native.test_suite(
         name = name,
@@ -932,5 +1018,7 @@ def sh_binaries_test_suite(name):
             ":name_collision_test",
             ":override_srcs_test",
             ":override_deps_test",
+            ":windows_strip_exe_test",
+            ":linux_keep_exe_test",
         ],
     )
