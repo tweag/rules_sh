@@ -12,7 +12,7 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 set -euo pipefail
 
 assert_eq() {
-  if [[ $1 != $2 ]]; then
+  if [[ "$1" != "$2" ]]; then
     echo -e "Wrong output found in $3:\nExpected: '$1'\nGot: '$2'"
     return 1
   fi
