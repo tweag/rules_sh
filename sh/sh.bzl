@@ -1,5 +1,6 @@
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@rules_sh//sh/private:defs.bzl", "ConstantInfo")
 
 ShBinariesInfo = provider(
     doc = "The description of a sh_binaries target.",
@@ -16,7 +17,9 @@ def _to_var_name(label_name):
     """
     return label_name.upper().replace("-", "_")
 
-def _sh_binaries_from_srcs(ctx, srcs):
+_WINDOWS_EXE_EXTENSIONS = [".exe", ".cmd", ".bat", ".ps1"]
+
+def _sh_binaries_from_srcs(ctx, srcs, is_windows):
     executable_files = []
     runfiles = ctx.runfiles()
     executables_dict = dict()
@@ -27,7 +30,11 @@ def _sh_binaries_from_srcs(ctx, srcs):
             fail("srcs must be executable, but '{}' is not.".format(src.label))
 
         executable = src[DefaultInfo].files_to_run.executable
-        (name, _) = paths.split_extension(executable.basename)
+        name = executable.basename
+        if is_windows:
+            (noext, ext) = paths.split_extension(executable.basename)
+            if ext in _WINDOWS_EXE_EXTENSIONS:
+                name = noext
 
         if name in executables_dict:
             fail("name collision on '{}' between '{}' and '{}' in srcs.".format(
@@ -121,7 +128,8 @@ def _mk_default_info(ctx, direct, transitive, data_runfiles):
     )
 
 def _sh_binaries_impl(ctx):
-    direct = _sh_binaries_from_srcs(ctx, ctx.attr.srcs)
+    is_windows = ctx.attr._is_windows[ConstantInfo].value
+    direct = _sh_binaries_from_srcs(ctx, ctx.attr.srcs, is_windows)
     transitive = _sh_binaries_from_deps(ctx, ctx.attr.deps)
     data_runfiles = _runfiles_from_data(ctx, ctx.attr.data)
 
@@ -144,6 +152,9 @@ sh_binaries = rule(
         "data": attr.label_list(
             allow_files = True,
             doc = "Additional runtime dependencies needed by any of the bundled binaries.",
+        ),
+        "_is_windows": attr.label(
+            default = "@rules_sh//sh/private:is_windows",
         ),
     },
     executable = True,
