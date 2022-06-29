@@ -298,7 +298,7 @@ def _custom_rule_impl(ctx):
 
 *Caveat: Using Binaries that require Runfiles*
 
-Note, support for binarires that require runfiles is limited due to limitations
+Note, support for binaries that require runfiles is limited due to limitations
 imposed by Bazel's Starlark API, see [#15486][issue-15486]. In order for these
 to work you will need to define the `RUNFILES_DIR` or `RUNFILES_MANIFEST_FILE`
 environment variables for the action using tools from the bundle.
