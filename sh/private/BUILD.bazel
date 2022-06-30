@@ -1,0 +1,10 @@
+load(":defs.bzl", "bool_constant")
+
+bool_constant(
+    name = "is_windows",
+    value = select({
+        "@platforms//os:windows": True,
+        "//conditions:default": False,
+    }),
+    visibility = ["//visibility:public"],
+)
