@@ -21,7 +21,7 @@ ANOTHER_EXE="$(rlocation "$5")"
 ANOTHER_SHIM="$(rlocation "$6")"
 
 assert_file_eq() {
-  cmp --silent "$1" "$2" || {
+  comm "$1" "$2" || {
     echo "Expected files to be equal, but they are different: '$1' and '$2'". >&2
     return 1
   }
