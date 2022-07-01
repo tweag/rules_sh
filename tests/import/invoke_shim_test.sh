@@ -19,5 +19,5 @@ assert_eq() {
 }
 
 EXPECTED_OUTPUT="Hello World"
-OUTPUT="$(cat "$(rlocation "rules_sh/invoke_shim.out")")"
+OUTPUT="$(cat "$(rlocation "rules_sh/tests/import/invoke_shim.out")")"
 assert_eq "$EXPECTED_OUTPUT" "$OUTPUT" "invoke_shim"

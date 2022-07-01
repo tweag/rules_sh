@@ -88,9 +88,9 @@ def _invoke_shim_test():
         outs = ["invoke_shim.out"],
         cmd = """\
 PATH="$(_TOOLS_PATH):$$PATH"
-cmd /c echo Hello World >$(OUTS)
+powershell -Command 'echo "Hello World" | Out-File -FilePath $(OUTS)'
 """,
-        toolchains = ["@rules_sh_import_test_invoke_shim_test_cmd//:tools"],
+        toolchains = ["@rules_sh_import_test_invoke_shim_test_powershell//:tools"],
         tags = ["manual"],
         target_compatible_with = ["@platforms//os:windows"],
     )
@@ -101,16 +101,16 @@ cmd /c echo Hello World >$(OUTS)
         data = [":invoke_shim"],
     )
 
-def _invoke_shim_test_cmd_impl(repository_ctx):
+def _invoke_shim_test_powershell_impl(repository_ctx):
     cpu_value = get_cpu_value(repository_ctx)
     if cpu_value.find("windows") != -1:
-        cmd = repository_ctx.which("cmd")
-        if cmd == None:
-            fail("Could not find cmd")
+        powershell = repository_ctx.which("powershell")
+        if powershell == None:
+            fail("Could not find powershell")
         create_shim(
             repository_ctx,
-            name = "cmd",
-            target = cmd,
+            name = "powershell",
+            target = powershell,
         )
     repository_ctx.file(
         "BUILD.bazel",
@@ -119,11 +119,11 @@ load("@rules_sh//sh:sh.bzl", "sh_binaries")
 sh_binaries(
     name = "tools",
     srcs = select({
-        "@platforms//os:windows": ["cmd.exe"],
+        "@platforms//os:windows": ["powershell.exe"],
         "//conditions:default": [],
     }),
     data = select({
-        "@platforms//os:windows": ["cmd.shim"],
+        "@platforms//os:windows": ["powershell.shim"],
         "//conditions:default": [],
     }),
     visibility = ["//visibility:public"],
@@ -132,13 +132,13 @@ sh_binaries(
         executable = True,
     )
 
-_invoke_shim_test_cmd = repository_rule(
-    _invoke_shim_test_cmd_impl,
+_invoke_shim_test_powershell = repository_rule(
+    _invoke_shim_test_powershell_impl,
 )
 
 def _invoke_shim_repositories():
-    _invoke_shim_test_cmd(
-        name = "rules_sh_import_test_invoke_shim_test_cmd",
+    _invoke_shim_test_powershell(
+        name = "rules_sh_import_test_invoke_shim_test_powershell",
     )
 
 # test suite #########################################################
