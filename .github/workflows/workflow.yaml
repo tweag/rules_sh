@@ -7,8 +7,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        bzlmod: [workspace, module]
+        os: [windows-latest]
+        bzlmod: [workspace]
     defaults:
       run:
         shell: bash
@@ -35,6 +35,10 @@ jobs:
           	build --experimental_enable_bzlmod
           	EOF
           fi
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
       - name: Build & Test
         run: |
           if [[ ${{ runner.os }} == Windows ]]; then
