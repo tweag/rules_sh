@@ -1,0 +1,3 @@
+load(":import_test.bzl", "import_test_suite")
+
+import_test_suite(name = "import_test")
