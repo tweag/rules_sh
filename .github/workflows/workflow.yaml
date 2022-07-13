@@ -14,7 +14,7 @@ jobs:
         shell: bash
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: bazelbuild/setup-bazelisk@v1
       - name: Configure
         env:
