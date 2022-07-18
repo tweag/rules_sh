@@ -325,6 +325,7 @@ toolchain(
         arch = {
             "darwin_arm64": "arm64",
             "arm64_windows": "arm64",
+            "aarch64": "arm64",
         }.get(cpu, "x86_64"),
         os = {
             "darwin": "osx",
