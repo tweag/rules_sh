@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.3.0...HEAD
+
+## [0.3.0] - 2022-07-19
+
+[0.3.0]: https://github.com/tweag/rules_sh/compare/v0.2.0...v0.3.0
 
 ### Added
 
@@ -16,6 +20,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   the `ShBinariesInfo` provider.
   See [issue #19][#19].
 
+### Changed
+
+- Modularized rules_sh in preparation for [bzlmod](https://docs.bazel.build/versions/5.2.0/bzlmod.html)
+  See [#18]
+
+[#18]: https://github.com/tweag/rules_sh/issues/18
 [#19]: https://github.com/tweag/rules_sh/issues/19
 
 ## [0.2.0] - 2020-03-26
