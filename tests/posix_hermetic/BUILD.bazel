@@ -1,0 +1,3 @@
+load(":posix_hermetic_test.bzl", "posix_hermetic_test_suite")
+
+posix_hermetic_test_suite(name = "posix_hermetic_test")
