@@ -8,6 +8,7 @@ bzl_library(
     srcs = [
         "@bazel_tools//tools:bzl_srcs",
     ],
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
