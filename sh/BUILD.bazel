@@ -44,6 +44,7 @@ bzl_library(
     visibility = ["//visibility:public"],
     deps = [
         ":bazel_tools",
+        "//sh/private:defs",
         "//sh/private:posix",
         "@bazel_skylib//lib:paths",
     ],

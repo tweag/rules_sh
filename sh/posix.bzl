@@ -9,6 +9,11 @@ available in `posix.commands`.
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/cpp:lib_cc_configure.bzl", "get_cpu_value")
+load(
+    "//sh/private:defs.bzl",
+    "mk_default_info_with_files_to_run",
+    "mk_template_variable_info",
+)
 load("//sh/private:posix.bzl", _commands = "commands")
 
 TOOLCHAIN_TYPE = "@rules_sh//sh/posix:toolchain_type"
@@ -57,13 +62,29 @@ See `sh_posix_make_variables` on how to use this toolchain in genrules.
 
 def _sh_posix_make_variables_impl(ctx):
     toolchain = ctx.toolchains[TOOLCHAIN_TYPE]
-    cmd_vars = {
-        "POSIX_%s" % cmd.upper(): cmd_path
-        for cmd in _commands
-        for cmd_path in [toolchain.commands[cmd]]
-        if cmd_path
-    }
-    return [platform_common.TemplateVariableInfo(cmd_vars)]
+
+    if not hasattr(toolchain, "sh_binaries_info"):
+        cmd_vars = {
+            "POSIX_%s" % cmd.upper(): cmd_path
+            for cmd in _commands
+            for cmd_path in [toolchain.commands[cmd]]
+            if cmd_path
+        }
+        return [platform_common.TemplateVariableInfo(cmd_vars)]
+
+    template_variable_info = mk_template_variable_info(
+        "posix",
+        toolchain.sh_binaries_info,
+    )
+
+    default_info = mk_default_info_with_files_to_run(
+        ctx,
+        ctx.label.name,
+        toolchain.tool[DefaultInfo].files,
+        toolchain.tool[DefaultInfo].default_runfiles,
+    )
+
+    return [template_variable_info, default_info]
 
 sh_posix_make_variables = rule(
     doc = """
