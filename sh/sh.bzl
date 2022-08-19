@@ -1,6 +1,10 @@
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@rules_sh//sh/private:defs.bzl", "ConstantInfo")
+load(
+    "@rules_sh//sh/private:defs.bzl",
+    "ConstantInfo",
+    "mk_template_variable_info",
+)
 
 ShBinariesInfo = provider(
     doc = "The description of a sh_binaries target.",
@@ -9,13 +13,6 @@ ShBinariesInfo = provider(
         "paths": "depset of string, The directories under which the binaries can be found.",
     },
 )
-
-def _to_var_name(label_name):
-    """Turn a label name into a template variable info.
-
-    Uses all upper case variable names with `_` as separator.
-    """
-    return label_name.upper().replace("-", "_")
 
 _WINDOWS_EXE_EXTENSIONS = [".exe", ".cmd", ".bat", ".ps1"]
 
@@ -101,18 +98,6 @@ def _mk_sh_binaries_info(direct, transitive):
         ),
     )
 
-def _mk_template_variable_info(name, sh_binaries_info):
-    var_prefix = _to_var_name(name)
-    return platform_common.TemplateVariableInfo(dicts.add(
-        {
-            "{}_{}".format(var_prefix, _to_var_name(name)): file.path
-            for name, file in sh_binaries_info.executables.items()
-        },
-        {
-            "_{}_PATH".format(var_prefix): ":".join(sh_binaries_info.paths.to_list()),
-        },
-    ))
-
 def _mk_default_info(ctx, direct, transitive, data_runfiles):
     # Create a dummy executable for this target to trigger the generation of a
     # FilesToRun provider which can be used in custom rules depending on this
@@ -134,7 +119,7 @@ def _sh_binaries_impl(ctx):
     data_runfiles = _runfiles_from_data(ctx, ctx.attr.data)
 
     sh_binaries_info = _mk_sh_binaries_info(direct, transitive)
-    template_variable_info = _mk_template_variable_info(ctx.label.name, sh_binaries_info)
+    template_variable_info = mk_template_variable_info(ctx.label.name, sh_binaries_info)
     default_info = _mk_default_info(ctx, direct, transitive, data_runfiles)
 
     return [sh_binaries_info, template_variable_info, default_info]
