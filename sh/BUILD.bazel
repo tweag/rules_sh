@@ -32,3 +32,5 @@ bzl_library(
         "@bazel_skylib//lib:paths",
     ],
 )
+
+exports_files(["posix.bzl"])

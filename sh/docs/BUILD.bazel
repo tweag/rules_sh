@@ -1,0 +1,8 @@
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
+
+stardoc(
+    name = "posix-docs",
+    input = "//sh:posix.bzl",
+    out = "posix-doc.md",
+    deps = ["//sh:posix"],
+)
