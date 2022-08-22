@@ -8,3 +8,5 @@ bool_constant(
     }),
     visibility = ["//visibility:public"],
 )
+
+exports_files(["defs.bzl"])

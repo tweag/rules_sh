@@ -22,6 +22,20 @@ bzl_library(
 )
 
 bzl_library(
+    name = "sh",
+    srcs = [
+        "sh.bzl",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bazel_tools",
+        "@bazel_skylib//lib:paths",
+        "@bazel_skylib//lib:dicts",
+        "//sh/private:defs.bzl"
+    ],
+)
+
+bzl_library(
     name = "posix",
     srcs = [
         "posix.bzl",
@@ -32,3 +46,8 @@ bzl_library(
         "@bazel_skylib//lib:paths",
     ],
 )
+
+exports_files([
+    "posix.bzl",
+    "repositories.bzl",
+])
