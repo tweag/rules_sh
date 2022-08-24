@@ -33,6 +33,8 @@ jobs:
             echo USE_BAZEL_VERSION=5.1.0 >.bazeliskrc
             cat >>.bazelrc.local <<-EOF
           	build --experimental_enable_bzlmod
+          	build --build_tag_filters=-stardoc_generation
+          	test --test_tag_filters=-stardoc_generation
           	EOF
           fi
       - name: Build & Test
