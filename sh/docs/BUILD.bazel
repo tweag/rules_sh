@@ -1,0 +1,67 @@
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+
+# The following rules are tagged with 'stardoc_generation' so we can skip them
+# for Github pipelines that have bzlmod enabled. This is necessary because
+# Stardoc does not currently work with modules. For more information see:
+#   https://github.com/bazelbuild/stardoc/issues/117
+#   https://github.com/bazelbuild/bazel/issues/14140
+
+stardoc(
+    name = "gen-setup-md",
+    input = "//sh:repositories.bzl",
+    out = "setup.md",
+    deps = ["//sh:repositories"],
+    symbol_names = ["rules_sh_dependencies"],
+    func_template = "//sh/docs:func.vm",
+    header_template = "//sh/docs:header.vm",
+    tags = ["stardoc_generation"],
+)
+
+stardoc(
+    name = "gen-usage-md",
+    input = "//sh:posix.bzl",
+    out = "usage.md",
+    deps = ["//sh:posix"],
+    symbol_names = ["sh_posix_configure"],
+    func_template = "//sh/docs:func.vm",
+    header_template = "//sh/docs:empty.vm",
+    tags = ["stardoc_generation"],
+)
+
+genrule(
+    name = "gen-readme-md",
+    outs = ["readme.md"],
+    srcs = [":setup.md", ":usage.md"],
+    cmd = "$(POSIX_CAT) $(execpath :setup.md) $(execpath :usage.md) >$(OUTS)",
+    toolchains = ["@rules_sh//sh/posix:make_variables"],
+    tags = ["stardoc_generation"],
+)
+
+write_file(
+    name = "write-copy-readme-sh",
+    out = "copy-readme.sh",
+    content = ["""
+        "$POSIX_CP" -v --no-preserve=all "$1" "$BUILD_WORKSPACE_DIRECTORY/README.md"
+    """],
+    tags = ["stardoc_generation"],
+)
+
+sh_binary(
+    name = "update-readme",
+    srcs = [":copy-readme.sh"],
+    args = ["$(location :readme.md)"],
+    data = [":readme.md"],
+    env = {"POSIX_CP": "$(POSIX_CP)"},
+    toolchains = ["@rules_sh//sh/posix:make_variables"],
+    tags = ["stardoc_generation"],
+)
+
+diff_test(
+    name = "check-readme",
+    failure_message = "Please run: bazel run //sh/docs:update-readme",
+    file1 = "//:README.md",
+    file2 = ":readme.md",
+    tags = ["stardoc_generation"],
+)

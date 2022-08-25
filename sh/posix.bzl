@@ -347,14 +347,72 @@ _sh_posix_config = repository_rule(
 )
 
 def sh_posix_configure(name = "local_posix_config", register = True):
-    """Autodetect local Unix commands.
+    """## Usage
 
-    Scans the environment (`$PATH`) for standard shell commands, generates a
-    corresponding POSIX toolchain and registers the toolchain.
+    ### Configure the toolchain
 
-    You can override the autodetection for individual commands by setting
-    environment variables of the form `POSIX_<COMMAND>`. E.g.
-    `POSIX_MAKE=/usr/bin/gmake` will override the make command.
+    Add the following to your `WORKSPACE` file to configure a local POSIX toolchain.
+
+    ``` python
+    load("@rules_sh//sh:posix.bzl", "sh_posix_configure")
+    sh_posix_configure()
+    ```
+
+    Bazel will query `PATH` for common Unix shell commands. You can override the
+    path to individual commands with environment variables of the form
+    `POSIX_<COMMAND_NAME>`. E.g. `POSIX_MAKE=/usr/bin/gmake`.
+
+    Note, this introduces an inhermeticity to the build as the contents of `PATH`
+    may be specific to your machine's setup.
+
+    Refer to [`rules_nixpkgs`'s][rules_nixpkgs] `nixpkgs_posix_configure` for a
+    hermetic alternative.
+
+    [rules_nixpkgs]: https://github.com/tweag/rules_nixpkgs.git
+
+    ### Use Unix tools in `genrule`s
+
+    The POSIX toolchain exposes custom make variables of the form
+    `POSIX_<COMMAND_NAME>` for discovered commands. Use these as follows:
+
+    ``` python
+    genrule(
+        name = "example",
+        srcs = [":some-input-file"],
+        outs = ["some-output-file"],
+        cmd = "$(POSIX_GREP) some-pattern $(execpath :some-input-file.bzl) > $(OUTS)",
+        toolchains = ["@rules_sh//sh/posix:make_variables"],
+    )
+    ```
+
+    See `posix.commands` defined in `@rules_sh//sh/posix.bzl` for the list of known
+    POSIX commands.
+
+    ### Use Unix tools in custom rules
+
+    The POSIX toolchain provides two attributes:
+    - `commands`: A `dict` mapping names of commands to their paths.
+    - `paths`: A deduplicated list of bindir paths suitable for generating `$PATH`.
+
+    ``` python
+    def _my_rule_impl(ctx):
+        posix_info = ctx.toolchains["@rules_sh//sh/posix:toolchain_type"]
+        ctx.actions.run(
+            executable = posix_info.commands["grep"],
+            ...
+        )
+        ctx.actions.run_shell(
+            command = "grep ...",
+            env = {"PATH": ":".join(posix_info.paths)},
+            ...
+        )
+
+    my_rule = rule(
+        _my_rule_impl,
+        toolchains = ["@rules_sh//sh/posix:toolchain_type"],
+        ...
+    )
+    ```
     """
     _sh_posix_config(name = name)
     if register:
