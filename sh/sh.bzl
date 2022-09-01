@@ -3,6 +3,7 @@ load("@bazel_skylib//lib:paths.bzl", "paths")
 load(
     "@rules_sh//sh/private:defs.bzl",
     "ConstantInfo",
+    "mk_default_info_with_files_to_run",
     "mk_template_variable_info",
 )
 
@@ -98,20 +99,6 @@ def _mk_sh_binaries_info(direct, transitive):
         ),
     )
 
-def _mk_default_info(ctx, direct, transitive, data_runfiles):
-    # Create a dummy executable for this target to trigger the generation of a
-    # FilesToRun provider which can be used in custom rules depending on this
-    # bundle to input the needed runfiles into build actions.
-    # This is a workaround for https://github.com/bazelbuild/bazel/issues/15486
-    executable = ctx.actions.declare_file(ctx.label.name)
-    ctx.actions.write(executable, "", is_executable = True)
-
-    return DefaultInfo(
-        executable = executable,
-        files = depset(direct = direct.executable_files, transitive = transitive.executable_files),
-        runfiles = direct.runfiles.merge(transitive.runfiles).merge(data_runfiles),
-    )
-
 def _sh_binaries_impl(ctx):
     is_windows = ctx.attr._is_windows[ConstantInfo].value
     direct = _sh_binaries_from_srcs(ctx, ctx.attr.srcs, is_windows)
@@ -120,7 +107,12 @@ def _sh_binaries_impl(ctx):
 
     sh_binaries_info = _mk_sh_binaries_info(direct, transitive)
     template_variable_info = mk_template_variable_info(ctx.label.name, sh_binaries_info)
-    default_info = _mk_default_info(ctx, direct, transitive, data_runfiles)
+    default_info = mk_default_info_with_files_to_run(
+        ctx,
+        ctx.label.name,
+        depset(direct = direct.executable_files, transitive = transitive.executable_files),
+        direct.runfiles.merge(transitive.runfiles).merge(data_runfiles),
+    )
 
     return [sh_binaries_info, template_variable_info, default_info]
 

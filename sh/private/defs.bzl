@@ -30,3 +30,16 @@ def mk_template_variable_info(name, sh_binaries_info):
             "_{}_PATH".format(var_prefix): ":".join(sh_binaries_info.paths.to_list()),
         },
     ))
+
+def mk_default_info_with_files_to_run(ctx, name, files, runfiles):
+    # Create a dummy executable to trigger the generation of a FilesToRun
+    # provider which can be used in custom rules depending on this bundle to
+    # input the needed runfiles into build actions.
+    # This is a workaround for https://github.com/bazelbuild/bazel/issues/15486
+    executable = ctx.actions.declare_file(name)
+    ctx.actions.write(executable, "", is_executable = True)
+    return DefaultInfo(
+        executable = executable,
+        files = files,
+        runfiles = runfiles,
+    )
