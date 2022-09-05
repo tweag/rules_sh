@@ -124,49 +124,49 @@ def _test_unrecognized_tool_toolchain():
         target_under_test = ":posix-toolchain-unrecognized",
     )
 
-# shell scripts toolchain ############################################
+# local binaries toolchian ###########################################
 
 # A toolchain that depends on local files, but has no further runtime
 # dependencies, like runfiles resolution.
 
-def _shell_scripts_toolchain():
-    native.sh_binary(
+def _local_binaries_toolchain():
+    native.cc_binary(
         name = "false",
-        srcs = ["false.sh"],
+        srcs = ["false.cc"],
     )
-    native.sh_binary(
+    native.cc_binary(
         name = "true",
-        srcs = ["true.sh"],
+        srcs = ["true.cc"],
     )
     sh_binaries(
-        name = "binaries-shell-scripts",
+        name = "binaries-local-binaries",
         srcs = [
             "false",
             "true",
         ],
     )
     sh_posix_hermetic_toolchain(
-        name = "posix-toolchain-shell-scripts",
-        cmds = ":binaries-shell-scripts",
+        name = "posix-toolchain-local-binaries",
+        cmds = ":binaries-local-binaries",
     )
     native.toolchain(
-        name = "toolchain-shell-scripts",
-        toolchain = ":posix-toolchain-shell-scripts",
+        name = "toolchain-local-binaries",
+        toolchain = ":posix-toolchain-local-binaries",
         toolchain_type = "//sh/posix:toolchain_type",
     )
 
-def _shell_scripts_toolchain_transition_impl(settings, attr):
+def _local_binaries_toolchain_transition_impl(settings, attr):
     return {
-        "//command_line_option:extra_toolchains": "//tests/posix_hermetic:toolchain-shell-scripts",
+        "//command_line_option:extra_toolchains": "//tests/posix_hermetic:toolchain-local-binaries",
     }
 
-_shell_scripts_toolchain_transition = transition(
-    implementation = _shell_scripts_toolchain_transition_impl,
+_local_binaries_toolchain_transition = transition(
+    implementation = _local_binaries_toolchain_transition_impl,
     inputs = [],
     outputs = ["//command_line_option:extra_toolchains"],
 )
 
-def _use_shell_scripts_toolchain_impl(ctx):
+def _use_local_binaries_toolchain_impl(ctx):
     src = ctx.attr.src[DefaultInfo]
     return [
         DefaultInfo(
@@ -177,9 +177,9 @@ def _use_shell_scripts_toolchain_impl(ctx):
         ),
     ]
 
-_use_shell_scripts_toolchain = rule(
-    _use_shell_scripts_toolchain_impl,
-    cfg = _shell_scripts_toolchain_transition,
+_use_local_binaries_toolchain = rule(
+    _use_local_binaries_toolchain_impl,
+    cfg = _local_binaries_toolchain_transition,
     attrs = {
         "src": attr.label(),
         "_allowlist_function_transition": attr.label(
@@ -188,7 +188,7 @@ _use_shell_scripts_toolchain = rule(
     },
 )
 
-def _shell_scripts_toolchain_test_impl(ctx):
+def _local_binaries_toolchain_test_impl(ctx):
     env = analysistest.begin(ctx)
 
     toolchain = analysistest.target_under_test(env)[platform_common.ToolchainInfo]
@@ -288,8 +288,8 @@ def _shell_scripts_toolchain_test_impl(ctx):
 
     return analysistest.end(env)
 
-shell_scripts_toolchain_test = analysistest.make(
-    _shell_scripts_toolchain_test_impl,
+local_binaries_toolchain_test = analysistest.make(
+    _local_binaries_toolchain_test_impl,
     attrs = {
         "false_binary": attr.label(
             executable = True,
@@ -310,11 +310,11 @@ shell_scripts_toolchain_test = analysistest.make(
     },
 )
 
-def _test_shell_scripts_toolchain():
-    _shell_scripts_toolchain()
-    shell_scripts_toolchain_test(
-        name = "shell_scripts_toolchain_test",
-        target_under_test = ":posix-toolchain-shell-scripts",
+def _test_local_binaries_toolchain():
+    _local_binaries_toolchain()
+    local_binaries_toolchain_test(
+        name = "local_binaries_toolchain_test",
+        target_under_test = ":posix-toolchain-local-binaries",
         false_binary = ":false",
         true_binary = ":true",
     )
@@ -381,7 +381,7 @@ OUT="$2"
 
 _custom_rule = rule(
     _custom_rule_impl,
-    cfg = _shell_scripts_toolchain_transition,
+    cfg = _local_binaries_toolchain_transition,
     toolchains = ["//sh/posix:toolchain_type"],
     attrs = {
         "_allowlist_function_transition": attr.label(
@@ -408,12 +408,12 @@ custom_rule_test = analysistest.make(
     attrs = {
         "false_binary": attr.label(
             executable = True,
-            # The _shell_scripts_toolchain_transition places the toolchain
+            # The _local_binaries_toolchain_transition places the toolchain
             # provided binary under a different configuration than the
             # reference binary would be under the regular `host` configuration.
             # We apply the same transition to the reference to align the
             # configurations.
-            cfg = _shell_scripts_toolchain_transition,
+            cfg = _local_binaries_toolchain_transition,
         ),
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
@@ -472,11 +472,11 @@ export PATH="$(_POSIX_PATH)"
 """,
         toolchains = [posix_hermetic.MAKE_VARIABLES],
     )
-    _use_shell_scripts_toolchain(
+    _use_local_binaries_toolchain(
         name = "genrule_explicit_transitioned",
         src = ":genrule_explicit",
     )
-    _use_shell_scripts_toolchain(
+    _use_local_binaries_toolchain(
         name = "genrule_path_transitioned",
         src = ":genrule_path",
     )
@@ -712,7 +712,7 @@ with_runfiles $(POSIX_ECHO) message >>$(OUTS)
 def posix_hermetic_test_suite(name):
     _test_empty_toolchain()
     _test_unrecognized_tool_toolchain()
-    _test_shell_scripts_toolchain()
+    _test_local_binaries_toolchain()
     _test_custom_rule()
     _test_genrule()
     _test_runfiles_toolchain()
@@ -724,7 +724,7 @@ def posix_hermetic_test_suite(name):
         tests = [
             ":empty_toolchain_test",
             ":unrecognized_tool_toolchain_test",
-            ":shell_scripts_toolchain_test",
+            ":local_binaries_toolchain_test",
             ":custom_rule_test",
             ":genrule_test",
             ":runfiles_toolchain_test",
