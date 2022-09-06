@@ -4,8 +4,8 @@ module(
     compatibility_level = 0,
     toolchains_to_register = ["@local_posix_config//:local_posix_toolchain"],
 )
-bazel_dep(name = "bazel_skylib", version = "1.2.1")
-bazel_dep(name = "platforms", version = "0.0.4")
+bazel_dep(name = "bazel_skylib", version = "1.3.0")
+bazel_dep(name = "platforms", version = "0.0.6")
 
 sh_configure = use_extension("@rules_sh//bzlmod:extensions.bzl", "sh_configure")
 use_repo(sh_configure, "local_posix_config")
