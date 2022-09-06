@@ -40,7 +40,6 @@ jobs:
             # Stardoc does not work with bzlmod.
             cat .bazelrc.disable-stardoc >>.bazelrc.local
             # Test with bzlmod enabled.
-            echo USE_BAZEL_VERSION=5.1.0 >.bazeliskrc
             cat >>.bazelrc.local <<-EOF
           	build --experimental_enable_bzlmod
           	EOF
