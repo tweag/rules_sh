@@ -1,0 +1,13 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+bzl_library(
+    name = "posix_hermetic",
+    srcs = [
+        "posix_hermetic.bzl",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//sh:bazel_tools",
+        "@bazel_skylib//lib:paths",
+    ],
+)

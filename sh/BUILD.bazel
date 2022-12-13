@@ -8,6 +8,7 @@ bzl_library(
     srcs = [
         "@bazel_tools//tools:bzl_srcs",
     ],
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
@@ -31,7 +32,7 @@ bzl_library(
         ":bazel_tools",
         "@bazel_skylib//lib:paths",
         "@bazel_skylib//lib:dicts",
-        "//sh/private:defs.bzl"
+        "//sh/private:defs",
     ],
 )
 
@@ -43,6 +44,8 @@ bzl_library(
     visibility = ["//visibility:public"],
     deps = [
         ":bazel_tools",
+        "//sh/private:defs",
+        "//sh/private:posix",
         "@bazel_skylib//lib:paths",
     ],
 )

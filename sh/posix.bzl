@@ -9,172 +9,12 @@ available in `posix.commands`.
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_tools//tools/cpp:lib_cc_configure.bzl", "get_cpu_value")
-
-# List of Unix commands as specified by IEEE Std 1003.1-2008.
-# Extracted from https://en.wikipedia.org/wiki/List_of_Unix_commands.
-_commands = [
-    "admin",
-    "alias",
-    "ar",
-    "asa",
-    "at",
-    "awk",
-    "basename",
-    "batch",
-    "bc",
-    "bg",
-    "cc",
-    "c99",
-    "cal",
-    "cat",
-    "cd",
-    "cflow",
-    "chgrp",
-    "chmod",
-    "chown",
-    "cksum",
-    "cmp",
-    "comm",
-    "command",
-    "compress",
-    "cp",
-    "crontab",
-    "csplit",
-    "ctags",
-    "cut",
-    "cxref",
-    "date",
-    "dd",
-    "delta",
-    "df",
-    "diff",
-    "dirname",
-    "du",
-    "echo",
-    "ed",
-    "env",
-    "ex",
-    "expand",
-    "expr",
-    "false",
-    "fc",
-    "fg",
-    "file",
-    "find",
-    "fold",
-    "fort77",
-    "fuser",
-    "gencat",
-    "get",
-    "getconf",
-    "getopts",
-    "grep",
-    "hash",
-    "head",
-    "iconv",
-    "id",
-    "ipcrm",
-    "ipcs",
-    "jobs",
-    "join",
-    "kill",
-    "lex",
-    "link",
-    "ln",
-    "locale",
-    "localedef",
-    "logger",
-    "logname",
-    "lp",
-    "ls",
-    "m4",
-    "mailx",
-    "make",
-    "man",
-    "mesg",
-    "mkdir",
-    "mkfifo",
-    "more",
-    "mv",
-    "newgrp",
-    "nice",
-    "nl",
-    "nm",
-    "nohup",
-    "od",
-    "paste",
-    "patch",
-    "pathchk",
-    "pax",
-    "pr",
-    "printf",
-    "prs",
-    "ps",
-    "pwd",
-    "qalter",
-    "qdel",
-    "qhold",
-    "qmove",
-    "qmsg",
-    "qrerun",
-    "qrls",
-    "qselect",
-    "qsig",
-    "qstat",
-    "qsub",
-    "read",
-    "renice",
-    "rm",
-    "rmdel",
-    "rmdir",
-    "sact",
-    "sccs",
-    "sed",
-    "sh",
-    "sleep",
-    "sort",
-    "split",
-    "strings",
-    "strip",
-    "stty",
-    "tabs",
-    "tail",
-    "talk",
-    "tee",
-    "test",
-    "time",
-    "touch",
-    "tput",
-    "tr",
-    "true",
-    "tsort",
-    "tty",
-    "type",
-    "ulimit",
-    "umask",
-    "unalias",
-    "uname",
-    "uncompress",
-    "unexpand",
-    "unget",
-    "uniq",
-    "unlink",
-    "uucp",
-    "uudecode",
-    "uuencode",
-    "uustat",
-    "uux",
-    "val",
-    "vi",
-    "wait",
-    "wc",
-    "what",
-    "who",
-    "write",
-    "xargs",
-    "yacc",
-    "zcat",
-]
+load(
+    "//sh/private:defs.bzl",
+    "mk_default_info_with_files_to_run",
+    "mk_template_variable_info",
+)
+load("//sh/private:posix.bzl", _commands = "commands")
 
 TOOLCHAIN_TYPE = "@rules_sh//sh/posix:toolchain_type"
 MAKE_VARIABLES = "@rules_sh//sh/posix:make_variables"
@@ -222,13 +62,29 @@ See `sh_posix_make_variables` on how to use this toolchain in genrules.
 
 def _sh_posix_make_variables_impl(ctx):
     toolchain = ctx.toolchains[TOOLCHAIN_TYPE]
-    cmd_vars = {
-        "POSIX_%s" % cmd.upper(): cmd_path
-        for cmd in _commands
-        for cmd_path in [toolchain.commands[cmd]]
-        if cmd_path
-    }
-    return [platform_common.TemplateVariableInfo(cmd_vars)]
+
+    if not hasattr(toolchain, "sh_binaries_info"):
+        cmd_vars = {
+            "POSIX_%s" % cmd.upper(): cmd_path
+            for cmd in _commands
+            for cmd_path in [toolchain.commands[cmd]]
+            if cmd_path
+        }
+        return [platform_common.TemplateVariableInfo(cmd_vars)]
+
+    template_variable_info = mk_template_variable_info(
+        "posix",
+        toolchain.sh_binaries_info,
+    )
+
+    default_info = mk_default_info_with_files_to_run(
+        ctx,
+        ctx.label.name,
+        toolchain.tool[DefaultInfo].files,
+        toolchain.tool[DefaultInfo].default_runfiles,
+    )
+
+    return [template_variable_info, default_info]
 
 sh_posix_make_variables = rule(
     doc = """

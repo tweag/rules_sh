@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 [Unreleased]: https://github.com/tweag/rules_sh/compare/v0.3.0...HEAD
 
+### Added
+
+- The new experimental `sh_posix_hermetic_toolchain` rule provides a hermetic
+  alternative to `sh_posix_toolchain` based on binary bundles defined by
+  `sh_binaries`.
+  See [PR #34][#34].
+
+[#34]: https://github.com/tweag/rules_sh/issues/34
+
 ## [0.3.0] - 2022-07-19
 
 [0.3.0]: https://github.com/tweag/rules_sh/compare/v0.2.0...v0.3.0

@@ -1,3 +1,4 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load(":defs.bzl", "bool_constant")
 
 bool_constant(
@@ -9,4 +10,21 @@ bool_constant(
     visibility = ["//visibility:public"],
 )
 
-exports_files(["defs.bzl"])
+bzl_library(
+    name = "defs",
+    srcs = [
+        "defs.bzl",
+    ],
+    deps = [
+        "@bazel_skylib//lib:dicts",
+    ],
+    visibility = ["//sh:__subpackages__"],
+)
+
+bzl_library(
+    name = "posix",
+    srcs = [
+        "posix.bzl",
+    ],
+    visibility = ["//sh:__subpackages__"],
+)
