@@ -23,7 +23,7 @@ def _sh_posix_hermetic_toolchain_impl(ctx):
         if cmd not in _commands
     ]
     if unrecognizeds:
-        fail("Unrecognized commands in keys of sh_posix_hermetic_toolchain's \"cmds\" attribute: {}. See posix_hermetic.commands in @rules_sh//sh:posix_hermetic.bzl for the list of recognized commands.".format(", ".join(unrecognizeds)))
+        fail("Unrecognized commands in keys of sh_posix_hermetic_toolchain's \"cmds\" attribute: {}. See posix_hermetic.commands in @rules_sh//sh/experimental:posix_hermetic.bzl for the list of recognized commands.".format(", ".join(unrecognizeds)))
 
     return [platform_common.ToolchainInfo(
         sh_binaries_info = sh_binaries_info,
