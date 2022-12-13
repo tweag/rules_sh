@@ -22,4 +22,4 @@ EXPECTED="1
 0"
 
 ACTUAL="$(cat "$(rlocation rules_sh/tests/posix_hermetic/genrule_path.txt)")"
-assert_eq "$EXPECTED" "$ACTUAL" "custom_rule.txt"
+assert_eq "$EXPECTED" "$ACTUAL" "genrule_path.txt"
