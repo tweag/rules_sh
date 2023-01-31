@@ -160,3 +160,8 @@ def import_test_suite(name):
 def import_test_repositories():
     _create_shim_repositories()
     _invoke_shim_repositories()
+
+test_repositories = module_extension(implementation = import_test_repositories)
+
+shim_repos   = module_extension(implementation = _create_shim_repositories)
+invoke_shims = module_extension(implementation = _invoke_shim_repositories)

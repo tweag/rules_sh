@@ -1,11 +1,11 @@
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load(
-    "//sh:sh.bzl",
+    "@rules_sh//sh:sh.bzl",
     "ShBinariesInfo",
     "sh_binaries",
 )
 load(
-    "//sh/experimental:posix_hermetic.bzl",
+    "@rules_sh//sh/experimental:posix_hermetic.bzl",
     "posix_hermetic",
     "sh_posix_hermetic_toolchain",
 )

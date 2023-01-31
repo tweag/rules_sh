@@ -1,0 +1,25 @@
+module(name = "rules_sh_tests")
+
+bazel_dep(name = "rules_sh", version = "", repo_name = "rules_sh")
+local_path_override(
+    module_name="rules_sh",
+    path = "../"
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.2.1")
+bazel_dep(name = "platforms", version = "0.0.5")
+
+sh_configure = use_extension("@rules_sh//bzlmod:extensions.bzl", "sh_configure")
+
+use_repo(sh_configure, "local_posix_config", "rules_sh_shim_exe")
+
+register_toolchains("@local_posix_config//:local_posix_toolchain")
+
+test_repositories = use_extension("//import:import_test.bzl", "test_repositories")
+use_repo(test_repositories, "local_test_repositories")
+
+shim_repos = use_extension("//import:import_test.bzl", "shim_repos")
+use_repo(shim_repos, "local_shim_repos")
+
+invoke_shims = use_extension("//import:import_test.bzl", "invoke_shims")
+use_repo(invoke_shims, "local_shim_invoke")

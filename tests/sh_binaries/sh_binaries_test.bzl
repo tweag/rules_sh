@@ -1,4 +1,4 @@
-load("//sh:sh.bzl", "ShBinariesInfo", "sh_binaries")
+load("@rules_sh//sh:sh.bzl", "ShBinariesInfo", "sh_binaries")
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 
 # bundle single binary ###############################################

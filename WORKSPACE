@@ -12,9 +12,9 @@ load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
 
 register_unittest_toolchains()
 
-load("//tests/import:import_test.bzl", "import_test_repositories")
+# load("//tests/import:import_test.bzl", "import_test_repositories")
 
-import_test_repositories()
+# import_test_repositories()
 
 
 # documentation dependencies
