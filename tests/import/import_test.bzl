@@ -3,7 +3,22 @@ load("@rules_sh//sh:import.bzl", "create_shim")
 
 # create shim ########################################################
 
+def _running_workspace():
+    """
+    Determines whether or not we're running under bzlmod and returns the corresponding workspace name.
+
+    The result of native.repository_name() is the following:
+      - bzlmod: @/external/rules_sh~override~sh_configure~rules_sh_shim_exe
+      - workspace: @rules_sh_tests/external/rules_sh_shim_exe
+    """
+    if str(native.repository_name()).startswith("@rules_sh_tests"):
+        return "rules_sh"
+
+    return "rules_sh_tests"
+
 def _create_shim_test():
+    current_workspace = _running_workspace()
+
     native.sh_test(
         name = "create_shim_test",
         srcs = ["create_shim_test.sh"],
@@ -17,12 +32,12 @@ def _create_shim_test():
             "@rules_sh_import_test_create_shim_test_shim//prefix:another.shim",
         ],
         args = [
-            "rules_sh/$(rootpath @rules_sh_shim_exe//file:shim.exe)",
-            "rules_sh/$(rootpath @rules_sh_import_test_create_shim_test_source//:empty.exe)",
-            "rules_sh/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.exe)",
-            "rules_sh/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.shim)",
-            "rules_sh/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.exe)",
-            "rules_sh/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.shim)",
+            "{}/$(rootpath @rules_sh_shim_exe//file:shim.exe)".format(current_workspace),
+            "{}/$(rootpath @rules_sh_import_test_create_shim_test_source//:empty.exe)".format(current_workspace),
+            "{}/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.exe)".format(current_workspace),
+            "{}/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.shim)".format(current_workspace),
+            "{}/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.exe)".format(current_workspace),
+            "{}/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.shim)".format(current_workspace),
         ],
     )
 

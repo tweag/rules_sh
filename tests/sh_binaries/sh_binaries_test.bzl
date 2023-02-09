@@ -1,4 +1,4 @@
-load("//sh:sh.bzl", "ShBinariesInfo", "sh_binaries")
+load("@rules_sh//sh:sh.bzl", "ShBinariesInfo", "sh_binaries")
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 
 # bundle single binary ###############################################
@@ -629,11 +629,13 @@ non_executable = rule(
 def _non_executable_test_impl(ctx):
     env = analysistest.begin(ctx)
 
+    workspace = str(ctx.label).split("//")[0]
+
     asserts.expect_failure(
         env,
         " ".join([
             "srcs must be executable,",
-            "but '//tests/sh_binaries:non_executable_target' is not.",
+            "but '{}//sh_binaries:non_executable_target' is not.".format(workspace),
         ]),
     )
 
@@ -667,11 +669,13 @@ def _test_non_executable():
 def _non_bundle_dependency_test_impl(ctx):
     env = analysistest.begin(ctx)
 
+    workspace = str(ctx.label).split("//")[0]
+
     asserts.expect_failure(
         env,
         " ".join([
             "deps must be sh_binaries targets,",
-            "but '//tests/sh_binaries:hello_world' is not.",
+            "but '{}//sh_binaries:hello_world' is not.".format(workspace),
         ]),
     )
 
@@ -721,12 +725,14 @@ dummy_binary = rule(
 def _name_collision_test_impl(ctx):
     env = analysistest.begin(ctx)
 
+    workspace = str(ctx.label).split("//")[0]
+
     asserts.expect_failure(
         env,
         " ".join([
             "name collision on 'dummy' between",
-            "'//tests/sh_binaries:name_collision_1' and",
-            "'//tests/sh_binaries:name_collision_2' in srcs.",
+            "'{}//sh_binaries:name_collision_1' and".format(workspace),
+            "'{}//sh_binaries:name_collision_2' in srcs.".format(workspace),
         ]),
     )
 
@@ -916,7 +922,7 @@ def _windows_strip_exe_test_impl(ctx):
 windows_strip_exe_test = analysistest.make(
     _windows_strip_exe_test_impl,
     config_settings = {
-        "//command_line_option:platforms": str(Label("//tests/sh_binaries:windows")),
+        "//command_line_option:platforms": str(Label("//sh_binaries:windows")),
     },
     # TODO[AH] The target_under_test should be provided in the exec
     # configuration to be sure that the Windows platform check considers the
@@ -958,7 +964,7 @@ def _linux_keep_exe_test_impl(ctx):
 linux_keep_exe_test = analysistest.make(
     _linux_keep_exe_test_impl,
     config_settings = {
-        "//command_line_option:platforms": str(Label("//tests/sh_binaries:linux")),
+        "//command_line_option:platforms": str(Label("//sh_binaries:linux")),
     },
     # TODO[AH] The target_under_test should be provided in the exec
     # configuration to be sure that the Windows platform check considers the

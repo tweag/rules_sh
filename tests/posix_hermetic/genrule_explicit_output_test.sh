@@ -21,5 +21,5 @@ assert_eq() {
 EXPECTED="1
 0"
 
-ACTUAL="$(cat "$(rlocation rules_sh/tests/posix_hermetic/genrule_explicit.txt)")"
+ACTUAL="$(cat "$(rlocation rules_sh_tests/posix_hermetic/genrule_explicit.txt)")"
 assert_eq "$EXPECTED" "$ACTUAL" "genrule_explicit.txt"

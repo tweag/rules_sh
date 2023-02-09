@@ -19,9 +19,9 @@ assert_eq() {
 }
 
 EXPECTED_RUN_OUTPUT="Hello File"
-RUN_OUTPUT="$(cat "$(rlocation rules_sh/tests/sh_binaries/custom_rule_run_output)")"
+RUN_OUTPUT="$(cat "$(rlocation rules_sh_tests/sh_binaries/custom_rule_run_output)")"
 assert_eq "$EXPECTED_RUN_OUTPUT" "$RUN_OUTPUT" "custom_rule_run_output"
 
 EXPECTED_RUN_SHELL_OUTPUT="Hello World"$'\n'"Hello File"
-RUN_SHELL_OUTPUT="$(cat "$(rlocation rules_sh/tests/sh_binaries/custom_rule_run_shell_output)")"
+RUN_SHELL_OUTPUT="$(cat "$(rlocation rules_sh_tests/sh_binaries/custom_rule_run_shell_output)")"
 assert_eq "$EXPECTED_RUN_SHELL_OUTPUT" "$RUN_SHELL_OUTPUT" "custom_rule_run_shell_output"
