@@ -916,7 +916,7 @@ def _windows_strip_exe_test_impl(ctx):
 windows_strip_exe_test = analysistest.make(
     _windows_strip_exe_test_impl,
     config_settings = {
-        "//command_line_option:platforms": "//tests/sh_binaries:windows",
+        "//command_line_option:platforms": str(Label("//tests/sh_binaries:windows")),
     },
     # TODO[AH] The target_under_test should be provided in the exec
     # configuration to be sure that the Windows platform check considers the
@@ -958,7 +958,7 @@ def _linux_keep_exe_test_impl(ctx):
 linux_keep_exe_test = analysistest.make(
     _linux_keep_exe_test_impl,
     config_settings = {
-        "//command_line_option:platforms": "//tests/sh_binaries:linux",
+        "//command_line_option:platforms": str(Label("//tests/sh_binaries:linux")),
     },
     # TODO[AH] The target_under_test should be provided in the exec
     # configuration to be sure that the Windows platform check considers the

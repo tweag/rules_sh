@@ -17,6 +17,16 @@ ShBinariesInfo = provider(
 
 _WINDOWS_EXE_EXTENSIONS = [".exe", ".cmd", ".bat", ".ps1"]
 
+def _normalize_label(label):
+    """
+    Labels using the workspace mode have a "@//" prefix when they're referencing a the local repository.
+    When bzlmod is used the same labels have a "@@//" prefix. The function will normalize both to the "//" prefix.
+    """
+    if str(label).startswith("@@//"):
+        return str(label).replace("@@//", "//")
+
+    return str(label).replace("@//", "//")
+
 def _sh_binaries_from_srcs(ctx, srcs, is_windows):
     executable_files = []
     runfiles = ctx.runfiles()
@@ -25,7 +35,7 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
 
     for src in srcs:
         if src[DefaultInfo].files_to_run == None or src[DefaultInfo].files_to_run.executable == None:
-            fail("srcs must be executable, but '{}' is not.".format(src.label))
+            fail("srcs must be executable, but '{}' is not.".format(_normalize_label(src.label)))
 
         executable = src[DefaultInfo].files_to_run.executable
         name = executable.basename
@@ -37,8 +47,8 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
         if name in executables_dict:
             fail("name collision on '{}' between '{}' and '{}' in srcs.".format(
                 name,
-                executables_dict[name].owner,
-                src.label,
+                _normalize_label(executables_dict[name].owner),
+                _normalize_label(src.label),
             ))
 
         executable_files.append(executable)
@@ -61,7 +71,7 @@ def _sh_binaries_from_deps(ctx, deps):
 
     for dep in deps:
         if not ShBinariesInfo in dep:
-            fail("deps must be sh_binaries targets, but '{}' is not.".format(dep.label))
+            fail("deps must be sh_binaries targets, but '{}' is not.".format(_normalize_label(dep.label)))
 
         executable_files.append(dep[DefaultInfo].files)
         runfiles = runfiles.merge(dep[DefaultInfo].default_runfiles)
