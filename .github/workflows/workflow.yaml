@@ -55,9 +55,9 @@ jobs:
         working-directory: ./tests
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
-          cp ../.bazelrc.local .
 
-          cat .bazelrc.local
+          cp ../.bazelrc.local .
+          cp ../.bazelrc .
 
           if [[ ${{ runner.os }} == Windows ]]; then
             # On Windows `//...` expands to `/...`.
