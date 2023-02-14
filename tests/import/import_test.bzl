@@ -7,14 +7,14 @@ def _running_workspace():
     """
     Determines whether or not we're running under bzlmod and returns the corresponding workspace name.
 
-    The result of native.repository_name() is the following:
-      - bzlmod: @/external/rules_sh~override~sh_configure~rules_sh_shim_exe
-      - workspace: @rules_sh_tests/external/rules_sh_shim_exe
+    The check is based on the fact that Labels created under bzlmod starts with double '@' instead of a single '@'.
     """
-    if str(native.repository_name()).startswith("@rules_sh_tests"):
-        return "rules_sh"
+    mock_label = str(Label('//mock_label'))
 
-    return "rules_sh_tests"
+    if mock_label.startswith("@@"):
+        return "rules_sh_tests"
+
+    return "rules_sh"
 
 def _create_shim_test():
     current_workspace = _running_workspace()
