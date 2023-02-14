@@ -71,12 +71,12 @@ jobs:
 
       - name: Run tests (workspace)
         if: matrix.bazel_mode == 'workspace'
+        working-directory: ./tests
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
 
           if [[ ${{ runner.os }} == Windows ]]; then
-            # On Windows `//...` expands to `/...`.
-            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///... @rules_sh_tests//...
+            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test @rules_sh//... @rules_sh_tests//...
           else
-            bazel test //... @rules_sh_tests//...
+            bazel test @rules_sh//... @rules_sh_tests//...
           fi
