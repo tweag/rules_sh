@@ -12,16 +12,6 @@ load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
 
 register_unittest_toolchains()
 
-# Dependencies of the tests module.
-local_repository(
-    name = "rules_sh_tests",
-    path = "tests",
-)
-
-load("@rules_sh_tests//import:import_test.bzl", "import_test_repositories")
-
-import_test_repositories()
-
 # documentation dependencies
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

@@ -59,10 +59,6 @@ jobs:
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
 
-          # Make the configs also available in the tests directory.
-          cp ../.bazelrc.local .
-          cp ../.bazelrc .
-
           if [[ ${{ runner.os }} == Windows ]]; then
             # On Windows `//...` expands to `/...`.
             BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test  ///...
@@ -75,10 +71,6 @@ jobs:
         working-directory: ./tests
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
-
-          # Make the configs also available in the tests directory.
-          cp ../.bazelrc.local .
-          cp ../.bazelrc .
 
           if [[ ${{ runner.os }} == Windows ]]; then
             BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test @rules_sh//... @rules_sh_tests//...
