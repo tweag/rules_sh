@@ -2,14 +2,14 @@
   "homepage": "https://github.com/tweag/rules_sh#readme",
   "maintainers": [
     {
-      "email": "andreas.herrmann@tweag.io",
-      "github": "aherrmann",
-      "name": "Andreas Herrmann"
-    },
-    {
       "email": "claudio.bley@tweag.io",
       "github": "avdv",
       "name": "Claudio Bley"
+    },
+    {
+      "email": "andreas.herrmann@tweag.io",
+      "github": "aherrmann",
+      "name": "Andreas Herrmann"
     }
   ],
   "versions": [],
