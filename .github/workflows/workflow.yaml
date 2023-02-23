@@ -12,8 +12,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        bzlmod: [workspace, module]
+        bazel_mode: [workspace, module]
         version: ["5.3.0", "6.0.0"]
+        exclude:
+          - version: 5.3.0
+            bazel_mode: module
     defaults:
       run:
         shell: bash
@@ -41,7 +44,7 @@ jobs:
             # Stardoc complains about docstring quote indentation on Windows.
             cat .bazelrc.disable-stardoc >>.bazelrc.local
           fi
-          if [[ ${{ matrix.bzlmod }} == module ]]; then
+          if [[ ${{ matrix.bazel_mode }} == module ]]; then
             # Stardoc does not work with bzlmod.
             cat .bazelrc.disable-stardoc >>.bazelrc.local
             # Test with bzlmod enabled.
@@ -50,13 +53,31 @@ jobs:
           	EOF
           fi
 
+      - name: Run tests (bzlmod)
+        if: matrix.bazel_mode == 'module'
+        working-directory: ./tests
+        run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
 
-      - name: Build & Test
-        run: |
           if [[ ${{ runner.os }} == Windows ]]; then
             # On Windows `//...` expands to `/...`.
-            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///...
+            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test  ///...
+          else
+            bazel test  //...
+          fi
+
+      - name: Run tests (workspace)
+        if: matrix.bazel_mode == 'workspace'
+        run: |
+          echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
+          echo "USE_BAZEL_VERSION=${{ matrix.version }}" > tests/.bazeliskrc
+
+          if [[ ${{ runner.os }} == Windows ]]; then
+            # Because of the docstring quote issue on Windows we skip the stardoc test on the main workspace.
+            # On Windows `//...` expands to `/...`.
+            cd tests && BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///...
           else
             bazel test //...
+
+            cd tests && bazel test //...
           fi

@@ -19,5 +19,5 @@ assert_eq() {
 }
 
 EXPECTED_OUTPUT="Hello World"
-OUTPUT="$(cat "$(rlocation "rules_sh/tests/import/invoke_shim.out")" | tr -d '\376\377')"  # Remove BOM
+OUTPUT="$(cat "$(rlocation "rules_sh_tests/import/invoke_shim.out")" | tr -d '\376\377')"  # Remove BOM
 assert_eq "$EXPECTED_OUTPUT" "$OUTPUT" "invoke_shim"

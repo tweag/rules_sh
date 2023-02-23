@@ -20,5 +20,5 @@ assert_eq() {
 
 EXPECTED="message ECHO SUFFIX"
 
-ACTUAL="$(cat "$(rlocation rules_sh/tests/posix_hermetic/runfiles_custom_rule.txt)")"
+ACTUAL="$(cat "$(rlocation rules_sh_tests/posix_hermetic/runfiles_custom_rule.txt)")"
 assert_eq "$EXPECTED" "$ACTUAL" "runfiles_custom_rule.txt"

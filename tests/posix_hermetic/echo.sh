@@ -11,5 +11,5 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 # --- end runfiles.bash initialization v2 ---
 set -euo pipefail
 
-SUFFIX="$(cat "$(rlocation rules_sh/tests/posix_hermetic/echo_data.txt)")"
+SUFFIX="$(cat "$(rlocation rules_sh_tests/posix_hermetic/echo_data.txt)")"
 echo "$@" "$SUFFIX"

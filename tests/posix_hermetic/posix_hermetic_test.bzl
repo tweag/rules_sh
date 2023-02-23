@@ -1,11 +1,11 @@
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load(
-    "//sh:sh.bzl",
+    "@rules_sh//sh:sh.bzl",
     "ShBinariesInfo",
     "sh_binaries",
 )
 load(
-    "//sh/experimental:posix_hermetic.bzl",
+    "@rules_sh//sh/experimental:posix_hermetic.bzl",
     "posix_hermetic",
     "sh_posix_hermetic_toolchain",
 )
@@ -152,12 +152,12 @@ def _local_binaries_toolchain():
     native.toolchain(
         name = "toolchain-local-binaries",
         toolchain = ":posix-toolchain-local-binaries",
-        toolchain_type = "//sh/posix:toolchain_type",
+        toolchain_type = "@rules_sh//sh/posix:toolchain_type",
     )
 
 def _local_binaries_toolchain_transition_impl(settings, attr):
     return {
-        "//command_line_option:extra_toolchains": "//tests/posix_hermetic:toolchain-local-binaries",
+        "//command_line_option:extra_toolchains": str(Label("//posix_hermetic:toolchain-local-binaries")),
     }
 
 _local_binaries_toolchain_transition = transition(
@@ -324,7 +324,7 @@ def _test_local_binaries_toolchain():
 CustomRuleInfo = provider()
 
 def _custom_rule_impl(ctx):
-    toolchain = ctx.toolchains["//sh/posix:toolchain_type"]
+    toolchain = ctx.toolchains["@rules_sh//sh/posix:toolchain_type"]
 
     explicit_output = ctx.actions.declare_file("{}_explicit.txt".format(ctx.label.name))
     ctx.actions.run_shell(
@@ -382,7 +382,7 @@ OUT="$2"
 _custom_rule = rule(
     _custom_rule_impl,
     cfg = _local_binaries_toolchain_transition,
-    toolchains = ["//sh/posix:toolchain_type"],
+    toolchains = ["@rules_sh//sh/posix:toolchain_type"],
     attrs = {
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
@@ -522,12 +522,12 @@ def _runfiles_toolchain():
     native.toolchain(
         name = "toolchain-runfiles",
         toolchain = ":posix-toolchain-runfiles",
-        toolchain_type = "//sh/posix:toolchain_type",
+        toolchain_type = "@rules_sh//sh/posix:toolchain_type",
     )
 
 def _runfiles_toolchain_transition_impl(settings, attr):
     return {
-        "//command_line_option:extra_toolchains": "//tests/posix_hermetic:toolchain-runfiles",
+        "//command_line_option:extra_toolchains": str(Label("//posix_hermetic:toolchain-runfiles")),
     }
 
 _runfiles_toolchain_transition = transition(
@@ -606,7 +606,7 @@ def _test_runfiles_toolchain():
 # runfiles in custom rule ############################################
 
 def _runfiles_custom_rule_impl(ctx):
-    toolchain = ctx.toolchains["//sh/posix:toolchain_type"]
+    toolchain = ctx.toolchains["@rules_sh//sh/posix:toolchain_type"]
 
     (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [toolchain.tool])
 
@@ -647,7 +647,7 @@ $ECHO message >>$OUT
 _runfiles_custom_rule = rule(
     _runfiles_custom_rule_impl,
     cfg = _runfiles_toolchain_transition,
-    toolchains = ["//sh/posix:toolchain_type"],
+    toolchains = ["@rules_sh//sh/posix:toolchain_type"],
     attrs = {
         "_allowlist_function_transition": attr.label(
             default = "@bazel_tools//tools/allowlists/function_transition_allowlist",

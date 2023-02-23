@@ -21,8 +21,8 @@ assert_eq() {
 EXPECTED="1
 0"
 
-ACTUAL="$(cat "$(rlocation rules_sh/tests/posix_hermetic/custom_rule_explicit.txt)")"
+ACTUAL="$(cat "$(rlocation rules_sh_tests/posix_hermetic/custom_rule_explicit.txt)")"
 assert_eq "$EXPECTED" "$ACTUAL" "custom_rule_explicit.txt"
 
-ACTUAL="$(cat "$(rlocation rules_sh/tests/posix_hermetic/custom_rule_path.txt)")"
+ACTUAL="$(cat "$(rlocation rules_sh_tests/posix_hermetic/custom_rule_path.txt)")"
 assert_eq "$EXPECTED" "$ACTUAL" "custom_rule_path.txt"

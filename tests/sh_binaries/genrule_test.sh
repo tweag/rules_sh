@@ -19,13 +19,13 @@ assert_eq() {
 }
 
 EXPECTED_OUTPUT="Hello World"
-OUTPUT="$(cat "$(rlocation rules_sh/tests/sh_binaries/genrule_output_world)")"
+OUTPUT="$(cat "$(rlocation rules_sh_tests/sh_binaries/genrule_output_world)")"
 assert_eq "$EXPECTED_OUTPUT" "$OUTPUT" "genrule_output_world"
 
 EXPECTED_OUTPUT="Hello File"
-OUTPUT="$(cat "$(rlocation rules_sh/tests/sh_binaries/genrule_output_data)")"
+OUTPUT="$(cat "$(rlocation rules_sh_tests/sh_binaries/genrule_output_data)")"
 assert_eq "$EXPECTED_OUTPUT" "$OUTPUT" "genrule_output_data"
 
 EXPECTED_OUTPUT="Hello World"$'\n'"Hello File"
-OUTPUT="$(cat "$(rlocation rules_sh/tests/sh_binaries/genrule_output_by_path)")"
+OUTPUT="$(cat "$(rlocation rules_sh_tests/sh_binaries/genrule_output_by_path)")"
 assert_eq "$EXPECTED_OUTPUT" "$OUTPUT" "genrule_output_by_path"

@@ -1,16 +1,25 @@
-workspace(name = "rules_sh")
+workspace(name = "rules_sh_tests")
 
-load("//sh:repositories.bzl", "rules_sh_dependencies")
+local_repository(
+    name = "rules_sh",
+    path = "../",
+)
+
+load("@rules_sh//sh:repositories.bzl", "rules_sh_dependencies")
 
 rules_sh_dependencies()
 
-load("//sh:posix.bzl", "sh_posix_configure")
+load("@rules_sh//sh:posix.bzl", "sh_posix_configure")
 
 sh_posix_configure()
 
 load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
 
 register_unittest_toolchains()
+
+load("//import:import_test.bzl", "import_test_repositories")
+
+import_test_repositories()
 
 # documentation dependencies
 

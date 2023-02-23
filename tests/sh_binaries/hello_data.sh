@@ -9,7 +9,7 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
   source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
   { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
 # --- end runfiles.bash initialization v2 ---
-DATA="$(tr -d '\r\n' <"$(rlocation rules_sh/tests/sh_binaries/hello_data.txt)")"
+DATA="$(tr -d '\r\n' <"$(rlocation rules_sh_tests/sh_binaries/hello_data.txt)")"
 if [[ $# -ge 1 ]]; then
   exec >"$1"
 fi
