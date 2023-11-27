@@ -1,6 +1,6 @@
 # Shell rules for Bazel
 
-[![Build](https://github.com/tweag/rules_sh/actions/workflows/workflow.yaml/badge.svg?event=schedule)](https://github.com/tweag/rules_sh/actions/workflows/workflow.yaml)
+[![Continuous Integration](https://github.com/tweag/rules_sh/actions/workflows/workflow.yaml/badge.svg?event=schedule)](https://github.com/tweag/rules_sh/actions/workflows/workflow.yaml)
 
 This project extends Bazel with a toolchain for common shell commands.
 
