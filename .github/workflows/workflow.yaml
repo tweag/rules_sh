@@ -39,9 +39,6 @@ jobs:
           bazelrc_path: .bazelrc.local
       - name: Configure
         run: |
-          # DEBUG BEGIN
-          cat >&2 .bazelrc.local
-          # DEBUG END
           cat >>.bazelrc.local <<EOF
           build --config=ci
           EOF
