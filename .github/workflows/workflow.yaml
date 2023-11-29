@@ -31,9 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: bazelbuild/setup-bazelisk@v2
-        # DO NOT MERGE!!!
-        # TODO: Update with the correct tagged release.
-      - uses: tweag/configure-bazel-remote-cache-auth@fix_output
+      - uses: tweag/configure-bazel-remote-cache-auth@v0
         with:
           buildbuddy_api_key: ${{ secrets.BUILDBUDDY_API_KEY }}
           bazelrc_path: .bazelrc.local
