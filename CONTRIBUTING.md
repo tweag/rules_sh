@@ -43,9 +43,6 @@ for CI.
 
 To enable the remote cache, 
 
-1. Add `build --remote_header=x-buildbuddy-api-key=${buildbuddy_api_key}` to your `$HOME/.bazelrc`
-   file replacing `${buildbuddy_api_key}` with the actual API key value.
-1. If a `.bazelrc.local` file does not exist in the root directory for the Bazel workspace, create
-   it (e.g. `touch .bazelrc.local`).
-1. Add `build --config=cache` to the `.bazelrc.local` file in the root directory for the Bazel
-   workspace.
+1. Add `build --remote_header=x-buildbuddy-api-key=${buildbuddy_api_key}` to `.bazelrc.auth`
+   at the root of the workspace, replacing `${buildbuddy_api_key}` with the actual API key value.
+1. Add `build --config=cache` to `.bazelrc.local` at the root of the workspace.

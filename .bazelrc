@@ -14,4 +14,8 @@ build:ci --config=cache
 build:ci --remote_upload_local_results
 test:ci --test_output=errors
 
+# Try to load a file that includes the remote cache authentication flag
+try-import %workspace%/.bazelrc.auth
+
+# Try to load any configuration that is specific for this host
 try-import %workspace%/.bazelrc.local
