@@ -1,12 +1,21 @@
-# Use a remote cache during CI
-build:ci --bes_results_url=https://app.buildbuddy.io/invocation/
-build:ci --bes_backend=grpcs://remote.buildbuddy.io
-build:ci --remote_cache=grpcs://remote.buildbuddy.io
-build:ci --remote_timeout=3600
+# Remote Cache Configuration
+build:cache --bes_results_url=https://app.buildbuddy.io/invocation/
+build:cache --bes_backend=grpcs://remote.buildbuddy.io
+build:cache --remote_cache=grpcs://remote.buildbuddy.io
+build:cache --remote_timeout=3600
 # Avoid failures of the form `deadline exceeded after 14999958197ns DEADLINE_EXCEEDED`.
 # See https://github.com/tweag/rules_haskell/issues/1498.
-build:ci --keep_backend_build_event_connections_alive=false
+build:cache --keep_backend_build_event_connections_alive=false
+# All clients except CI should be configured as read-only
+build:cache --noremote_upload_local_results
 
+# CI Configuration
+build:ci --config=cache
+build:ci --remote_upload_local_results
 test:ci --test_output=errors
 
+# Try to load a file that includes the remote cache authentication flag
+try-import %workspace%/.bazelrc.auth
+
+# Try to load any configuration that is specific for this host
 try-import %workspace%/.bazelrc.local
