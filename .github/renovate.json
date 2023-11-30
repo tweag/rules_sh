@@ -1,10 +1,7 @@
 {
-    "enabledManagers": [
-        "bazel",
-        "bazel-module"
-    ],
     "extends": [
-        "config:recommended"
+        "github>tweag/renovate-presets:ruleset_base",
+        "github>tweag/renovate-presets:mergify"
     ],
     "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
     "onboarding": false,
