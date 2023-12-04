@@ -1,1 +1,5 @@
 /**/bazel-*
+
+# These files are specific to the host.
+.bazelrc.auth
+.bazelrc.local
