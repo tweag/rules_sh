@@ -136,6 +136,10 @@ def _sh_posix_config_impl(repository_ctx):
     cpu = get_cpu_value(repository_ctx)
     env = repository_ctx.os.environ
 
+    # DEBUG BEGIN
+    print("*** CHUCK _sh_posix_config_impl cpu: ", cpu)
+    # DEBUG END
+
     windows_sh_dir = None
     if cpu == "x64_windows":
         windows_sh_dir = _windows_detect_sh_dir(repository_ctx)
@@ -179,15 +183,15 @@ toolchain(
             if cmd_path
         ]),
         arch = {
-            "darwin_arm64": "arm64",
-            "arm64_windows": "arm64",
             "aarch64": "arm64",
+            "arm64_windows": "arm64",
+            "darwin_arm64": "arm64",
         }.get(cpu, "x86_64"),
         os = {
+            "arm64_windows": "windows",
             "darwin": "osx",
             "darwin_arm64": "osx",
             "x64_windows": "windows",
-            "arm64_windows": "windows",
         }.get(cpu, "linux"),
         toolchain_type = TOOLCHAIN_TYPE,
     ))
