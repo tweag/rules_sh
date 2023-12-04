@@ -191,6 +191,7 @@ toolchain(
             "arm64_windows": "windows",
             "darwin": "osx",
             "darwin_arm64": "osx",
+            "darwin_x86_64": "osx",
             "x64_windows": "windows",
         }.get(cpu, "linux"),
         toolchain_type = TOOLCHAIN_TYPE,
