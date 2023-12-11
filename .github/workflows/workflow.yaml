@@ -51,18 +51,18 @@ jobs:
           if [[ ${{ runner.os }} == Windows ]]; then
             # Stardoc complains about docstring quote indentation on Windows.
             cat >>.bazelrc.local <<-EOF
-            build --config=no-stardoc
-            EOF
+          build --config=no-stardoc
+          EOF
           fi
           if [[ ${{ matrix.bazel_mode }} == module ]]; then
             # Stardoc does not work with bzlmod.
             cat >>.bazelrc.local <<-EOF
-            build --config=no-stardoc
-            EOF
+          build --config=no-stardoc
+          EOF
             # Test with bzlmod enabled.
             cat >>.bazelrc.local <<-EOF
-          	build --experimental_enable_bzlmod
-          	EOF
+          build --experimental_enable_bzlmod
+          EOF
           fi
 
       # TODO: REMOVE ME!
