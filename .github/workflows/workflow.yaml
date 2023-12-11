@@ -49,18 +49,16 @@ jobs:
                   password ${{ secrets.GITHUB_TOKEN }}
           EOF
           if [[ ${{ runner.os }} == Windows ]]; then
-            # Stardoc complains about docstring quote indentation on Windows.
             cat >>.bazelrc.local <<-EOF
+          # Stardoc complains about docstring quote indentation on Windows.
           build --config=no-stardoc
           EOF
           fi
           if [[ ${{ matrix.bazel_mode }} == module ]]; then
-            # Stardoc does not work with bzlmod.
             cat >>.bazelrc.local <<-EOF
+          # Stardoc does not work with bzlmod.
           build --config=no-stardoc
-          EOF
-            # Test with bzlmod enabled.
-            cat >>.bazelrc.local <<-EOF
+          # Test with bzlmod enabled.
           build --experimental_enable_bzlmod
           EOF
           fi
