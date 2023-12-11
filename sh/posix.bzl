@@ -179,15 +179,16 @@ toolchain(
             if cmd_path
         ]),
         arch = {
-            "darwin_arm64": "arm64",
-            "arm64_windows": "arm64",
             "aarch64": "arm64",
+            "arm64_windows": "arm64",
+            "darwin_arm64": "arm64",
         }.get(cpu, "x86_64"),
         os = {
+            "arm64_windows": "windows",
             "darwin": "osx",
             "darwin_arm64": "osx",
+            "darwin_x86_64": "osx",
             "x64_windows": "windows",
-            "arm64_windows": "windows",
         }.get(cpu, "linux"),
         toolchain_type = TOOLCHAIN_TYPE,
     ))
