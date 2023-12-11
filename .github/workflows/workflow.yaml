@@ -39,36 +39,22 @@ jobs:
         with:
           machine: api.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Configure
-        run: |
-          cat >>.bazelrc.local <<-EOF
-          build --config=ci
-          EOF
-          cat >~/.netrc <<-EOF
-          machine api.github.com
-                  password ${{ secrets.GITHUB_TOKEN }}
-          EOF
-          if [[ ${{ runner.os }} == Windows ]]; then
-            cat >>.bazelrc.local <<-EOF
-          # Stardoc complains about docstring quote indentation on Windows.
-          build --config=no-stardoc
-          EOF
-          fi
-          if [[ ${{ matrix.bazel_mode }} == module ]]; then
-            cat >>.bazelrc.local <<-EOF
-          # Stardoc does not work with bzlmod.
-          build --config=no-stardoc
-          # Test with bzlmod enabled.
-          build --experimental_enable_bzlmod
-          EOF
-          fi
-
-      # TODO: REMOVE ME!
-      - name: DEBUG
-        shell: bash
-        run: |
-          cat >&2 .bazelrc.local
-
+      - name: Configure for CI
+        uses: ./.github/actions/write_bazelrc
+        with:
+          content: build --config=ci
+      - name: Disable stardoc
+        # Windows: Stardoc complains about docstring quote indentation on Windows.
+        # bzlmod: Stardoc does not work with bzlmod.
+        if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
+        uses: ./.github/actions/write_bazelrc
+        with:
+          content: build --config=no-stardoc
+      - name: Enable bzlmod
+        uses: ./.github/actions/write_bazelrc
+        if: ${{ matrix.bazel_mode == 'module' }}
+        with:
+          content: build --experimental_enable_bzlmod
       - name: Run tests (bzlmod)
         if: matrix.bazel_mode == 'module'
         working-directory: ./tests

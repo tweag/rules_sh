@@ -1,0 +1,22 @@
+name: Write / update a bazelrc file
+
+inputs:
+  content:
+    type: string
+    required: true
+  bazelrc_path:
+    type: string
+    default: .bazelrc.local
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      if: ${{ inputs.content != '' }}
+      env:
+        BAZELRC_CONTENT: ${{ inputs.content }}
+        BAZELRC_PATH: ${{ inputs.bazelrc_path }}
+      run: |
+        cat >>"${BAZELRC_PATH}" <<-EOF
+        ${BAZELRC_CONTENT}
+        EOF
