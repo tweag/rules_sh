@@ -41,10 +41,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure
         run: |
-          cat >>.bazelrc.local <<EOF
+          cat >>.bazelrc.local <<-EOF
           build --config=ci
           EOF
-          cat >~/.netrc <<EOF
+          cat >~/.netrc <<-EOF
           machine api.github.com
                   password ${{ secrets.GITHUB_TOKEN }}
           EOF
