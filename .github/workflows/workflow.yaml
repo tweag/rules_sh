@@ -39,11 +39,6 @@ jobs:
         with:
           machine: api.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
-      # TODO: REMOVE ME!
-      - name: DEBUG
-        shell: bash
-        run: |
-          cat >&2 "$HOME/.netrc"
       - name: Configure
         run: |
           cat >>.bazelrc.local <<EOF
