@@ -65,6 +65,12 @@ jobs:
           	EOF
           fi
 
+      # TODO: REMOVE ME!
+      - name: DEBUG
+        shell: bash
+        run: |
+          cat >&2 .bazelrc.local
+
       - name: Run tests (bzlmod)
         if: matrix.bazel_mode == 'module'
         working-directory: ./tests
