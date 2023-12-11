@@ -44,17 +44,21 @@ jobs:
           cat >>.bazelrc.local <<EOF
           build --config=ci
           EOF
-          cat >.bazelrc.disable-stardoc <<-EOF
-          	build --build_tag_filters=-stardoc_generation
-          	test --test_tag_filters=-stardoc_generation
-          	EOF
+          cat >~/.netrc <<EOF
+          machine api.github.com
+                  password ${{ secrets.GITHUB_TOKEN }}
+          EOF
           if [[ ${{ runner.os }} == Windows ]]; then
             # Stardoc complains about docstring quote indentation on Windows.
-            cat .bazelrc.disable-stardoc >>.bazelrc.local
+            cat >>.bazelrc.local <<-EOF
+            build --config=no-stardoc
+            EOF
           fi
           if [[ ${{ matrix.bazel_mode }} == module ]]; then
             # Stardoc does not work with bzlmod.
-            cat .bazelrc.disable-stardoc >>.bazelrc.local
+            cat >>.bazelrc.local <<-EOF
+            build --config=no-stardoc
+            EOF
             # Test with bzlmod enabled.
             cat >>.bazelrc.local <<-EOF
           	build --experimental_enable_bzlmod
