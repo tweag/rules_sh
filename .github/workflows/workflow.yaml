@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-2019]
         bazel_mode: [workspace, module]
-        version: ["5.3.0", "6.0.0", "7.0.0rc5"]
+        version: ["5.3.0", "6.0.0", "7.0.0"]
         exclude:
           - version: 5.3.0
             bazel_mode: module
