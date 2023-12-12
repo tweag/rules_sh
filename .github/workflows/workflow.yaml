@@ -1,3 +1,4 @@
+# TODO: Update version for tweag/write-bazelrc
 name: Continuous integration
 on:
   push:
@@ -40,18 +41,18 @@ jobs:
           machine: api.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure for CI
-        uses: ./.github/actions/write_bazelrc
+        uses: tweag/write-bazelrc@0ab86694ee69bdeede9416587412e0c5d93f5a44 # cg/initial_implementation
         with:
           content: build --config=ci
       - name: Disable stardoc
         # Windows: Stardoc complains about docstring quote indentation on Windows.
         # bzlmod: Stardoc does not work with bzlmod.
         if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
-        uses: ./.github/actions/write_bazelrc
+        uses: tweag/write-bazelrc@0ab86694ee69bdeede9416587412e0c5d93f5a44 # cg/initial_implementation
         with:
           content: build --config=no-stardoc
       - name: Enable bzlmod
-        uses: ./.github/actions/write_bazelrc
+        uses: tweag/write-bazelrc@0ab86694ee69bdeede9416587412e0c5d93f5a44 # cg/initial_implementation
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
           content: build --experimental_enable_bzlmod
