@@ -24,6 +24,9 @@ runs:
         RBT_WORKING_DIR: ${{ inputs.working-directory }}
       run: |
         [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
+        # DEBUG BEGIN
+        set -x
+        # DEBUG END
         bazel test '//...'
     - shell: bash
       if: ${{ ! startswith(inputs.os, 'windows-') }}
