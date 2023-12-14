@@ -9,11 +9,11 @@ inputs:
 
 runs:
   using: composite
-  env:
-    BAZEL_SH: ${{ startswith(inputs.os, 'windows-') && 'C:\msys64\usr\bin\bash.exe' || '' }}
-    RBT_WORKING_DIR: ${{ inputs.working-directory }}
   steps:
     - shell: bash
+      env:
+        BAZEL_SH: ${{ startswith(inputs.os, 'windows-') && 'C:\msys64\usr\bin\bash.exe' || '' }}
+        RBT_WORKING_DIR: ${{ inputs.working-directory }}
       run: |
         [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
         bazel test "//..."
