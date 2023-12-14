@@ -1,0 +1,18 @@
+name: Execute Bazel test
+description: Handles platform-specific settings.
+
+inputs:
+  working-directory:
+    type: string
+
+runs:
+  using: composite
+  env:
+    BAZEL_SH: ${{ runner.os == 'Windows' && 'C:\msys64\usr\bin\bash.exe' || '' }}
+    RBT_WORKING_DIR: ${{ inputs.working-directory }}
+  steps:
+    - shell: bash
+      run: |
+        [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
+        bazel test "//..."
+
