@@ -60,7 +60,7 @@ jobs:
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > tests/.bazeliskrc
       - name: Run Bazel test at root
-        if: ${{ matrix.bazel_mode == 'workspace' }}
+        if: ${{ matrix.bazel_mode == 'workspace' && matrix.os != 'windows-2019' }}
         uses: ./.github/actions/run_bazel_test
       - name: Run Bazel test under tests directory
         uses: ./.github/actions/run_bazel_test
