@@ -13,10 +13,17 @@ working_dir="${RBT_WORKING_DIR:-}"
 
 if is_windows; then
   export BAZEL_SH='C:\msys64\usr\bin\bash.exe'
+  bzl_pkgs='///...'
+else
+  bzl_pkgs='//...'
 fi
 
 if [[ "${working_dir:-}" != "" ]]; then
   cd "${working_dir}"
 fi
 
-bazel test '//...'
+# DEBUG BEGIN
+set -x
+# DEBUG END
+
+bazel test "${bzl_pkgs}"
