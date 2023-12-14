@@ -22,10 +22,4 @@ if [[ "${working_dir:-}" != "" ]]; then
   cd "${working_dir}"
 fi
 
-# DEBUG BEGIN
-echo >&2 "*** CHUCK $(basename "${BASH_SOURCE[0]}") =============" 
-echo >&2 "*** CHUCK $(basename "${BASH_SOURCE[0]}") PWD: ${PWD}" 
-find . -type d >&2
-# DEBUG END
-
 bazel test "${bzl_pkgs}"
