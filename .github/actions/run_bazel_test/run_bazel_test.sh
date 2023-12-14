@@ -18,7 +18,7 @@ else
   bzl_pkgs='//...'
 fi
 
-if [[ "${working_dir:-}" != "" ]]; then
+if [[ -n "${working_dir:-}" ]]; then
   cd "${working_dir}"
 fi
 
