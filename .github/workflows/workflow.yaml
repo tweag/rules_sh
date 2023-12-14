@@ -55,34 +55,46 @@ jobs:
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
           content: build --experimental_enable_bzlmod
-      - name: Run tests (bzlmod)
-        if: matrix.bazel_mode == 'module'
-        working-directory: ./tests
-        run: |
-          echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
-
-          if [[ ${{ runner.os }} == Windows ]]; then
-            # On Windows `//...` expands to `/...`.
-            BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test  ///...
-          else
-            bazel test  //...
-          fi
-
-      - name: Run tests (workspace)
-        if: matrix.bazel_mode == 'workspace'
+      - name: Configure the Bazel version
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > tests/.bazeliskrc
+      - name: Run Bazel test at root
+        if: ${{ matrix.bazel_mode == 'workspace' }}
+        uses: ./.github/actions/run_bazel_test
+      - name: Run Bazel test under tests directory
+        uses: ./.github/actions/run_bazel_test
+        with:
+          working-directory: tests
 
-          if [[ ${{ runner.os }} == Windows ]]; then
-            # Because of the docstring quote issue on Windows we skip the stardoc test on the main workspace.
-            # On Windows `//...` expands to `/...`.
-            cd tests && BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///...
-          else
-            bazel test //...
+      # - name: Run tests (bzlmod)
+      #   if: matrix.bazel_mode == 'module'
+      #   working-directory: ./tests
+      #   run: |
+      #     echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
 
-            cd tests && bazel test //...
-          fi
+      #     if [[ ${{ runner.os }} == Windows ]]; then
+      #       # On Windows `//...` expands to `/...`.
+      #       BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test  ///...
+      #     else
+      #       bazel test  //...
+      #     fi
+
+      # - name: Run tests (workspace)
+      #   if: matrix.bazel_mode == 'workspace'
+      #   run: |
+      #     echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
+      #     echo "USE_BAZEL_VERSION=${{ matrix.version }}" > tests/.bazeliskrc
+
+      #     if [[ ${{ runner.os }} == Windows ]]; then
+      #       # Because of the docstring quote issue on Windows we skip the stardoc test on the main workspace.
+      #       # On Windows `//...` expands to `/...`.
+      #       cd tests && BAZEL_SH='C:\msys64\usr\bin\bash.exe' bazel test ///...
+      #     else
+      #       bazel test //...
+
+      #       cd tests && bazel test //...
+      #     fi
 
   all_ci_tests:
     runs-on: ubuntu-latest
