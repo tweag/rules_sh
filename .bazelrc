@@ -14,6 +14,10 @@ build:ci --config=remote-cache
 build:ci --remote_upload_local_results
 test:ci --test_output=errors
 
+# No Stardoc
+build:no-stardoc --build_tag_filters=-stardoc_generation
+test:no-stardoc --test_tag_filters=-stardoc_generation
+
 # Try to load a file that includes the remote cache authentication flag
 try-import %workspace%/.bazelrc.auth
 
