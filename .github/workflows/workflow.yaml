@@ -62,13 +62,10 @@ jobs:
       - name: Run Bazel test at root
         if: ${{ matrix.bazel_mode == 'workspace' }}
         uses: ./.github/actions/run_bazel_test
-        with:
-          os: ${{ matrix.os }}
       - name: Run Bazel test under tests directory
         uses: ./.github/actions/run_bazel_test
         with:
           working-directory: tests
-          os: ${{ matrix.os }}
 
       # - name: Run tests (bzlmod)
       #   if: matrix.bazel_mode == 'module'

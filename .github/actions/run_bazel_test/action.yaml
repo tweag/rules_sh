@@ -4,40 +4,10 @@ description: Handles platform-specific settings.
 inputs:
   working-directory:
     type: string
-  # TODO: REMOVE os input
-  os:
-    type: string
 
 runs:
   using: composite
   steps:
-    # - shell: bash
-    #   env:
-    #     BAZEL_SH: ${{ startswith(inputs.os, 'windows-') && 'C:\msys64\usr\bin\bash.exe' || '' }}
-    #     RBT_WORKING_DIR: ${{ inputs.working-directory }}
-    #   run: |
-    #     [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
-    #     bazel test "//..."
-    # - shell: bash
-    #   if: ${{ startswith(inputs.os, 'windows-') }}
-    #   env:
-    #     BAZEL_SH: 'C:\msys64\usr\bin\bash.exe' 
-    #     RBT_WORKING_DIR: ${{ inputs.working-directory }}
-    #   run: |
-    #     [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
-    #     # DEBUG BEGIN
-    #     set -x
-    #     uname_output="$( uname -a )"
-    #     echo >&2 "*** CHUCK $(basename "${BASH_SOURCE[0]}") uname_output: ${uname_output}" 
-    #     # DEBUG END
-    #     bazel test '//...'
-    # - shell: bash
-    #   if: ${{ ! startswith(inputs.os, 'windows-') }}
-    #   env:
-    #     RBT_WORKING_DIR: ${{ inputs.working-directory }}
-    #   run: |
-    #     [[ "${RBT_WORKING_DIR:-}" != "" ]] && cd "${RBT_WORKING_DIR}"
-    #     bazel test '//...'
     - shell: bash
       env:
         RBT_WORKING_DIR: ${{ inputs.working-directory }}
