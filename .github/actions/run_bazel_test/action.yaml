@@ -4,11 +4,13 @@ description: Handles platform-specific settings.
 inputs:
   working-directory:
     type: string
+  os:
+    type: string
 
 runs:
   using: composite
   env:
-    BAZEL_SH: ${{ runner.os == 'Windows' && 'C:\msys64\usr\bin\bash.exe' || '' }}
+    BAZEL_SH: ${{ startswith(inputs.os, 'windows-') && 'C:\msys64\usr\bin\bash.exe' || '' }}
     RBT_WORKING_DIR: ${{ inputs.working-directory }}
   steps:
     - shell: bash
