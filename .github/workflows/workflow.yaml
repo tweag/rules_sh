@@ -46,7 +46,7 @@ jobs:
       - name: Disable stardoc
         # Windows: Stardoc complains about docstring quote indentation on Windows.
         # bzlmod: Stardoc does not work with bzlmod.
-        if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
+        if: ${{ matrix.os == windows-2019 || matrix.bazel_mode == 'module' }}
         uses: tweag/write-bazelrc@v0
         with:
           content: build --config=no-stardoc
