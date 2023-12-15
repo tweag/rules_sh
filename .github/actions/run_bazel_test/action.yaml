@@ -1,0 +1,14 @@
+name: Execute Bazel test
+description: Handles platform-specific settings.
+
+inputs:
+  working-directory:
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        RBT_WORKING_DIR: ${{ inputs.working-directory }}
+      run: ${GITHUB_ACTION_PATH}/run_bazel_test.sh
