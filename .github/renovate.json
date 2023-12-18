@@ -4,6 +4,5 @@
         "github>tweag/renovate-presets:mergify"
     ],
     "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-    "onboarding": false,
     "platform": "github"
 }
