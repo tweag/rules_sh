@@ -18,12 +18,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         bazel_mode: [workspace, module]
-        version: ["5.3.0", "6.0.0", "7.0.0"]
+        version: ["5.4.1", "6.4.0", "7.0.0"]
+        include:
+          # Bazel 5.4.1 does not find Visual Studio on windows-2022. So, we 
+          # test it on windows-2019.
+          - version: 5.4.1
+            bazel_mode: workspace
+            os: windows-2019
         exclude:
-          - version: 5.3.0
+          - version: 5.4.1
             bazel_mode: module
+          # Bazel 5.4.1 does not find Visual Studio on windows-2022.
+          - version: 5.4.1
+            os: windows-latest
     defaults:
       run:
         shell: bash
