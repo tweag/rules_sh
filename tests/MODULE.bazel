@@ -1,6 +1,6 @@
 module(name = "rules_sh_tests")
 
-bazel_dep(name = "rules_sh", version = "0.3.0")
+bazel_dep(name = "rules_sh", version = "0.4.0")
 local_path_override(
     module_name = "rules_sh",
     path = "..",
