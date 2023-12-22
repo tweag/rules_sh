@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [0.4.0]
 
-[Unreleased]: https://github.com/tweag/rules_sh/compare/v0.3.0...HEAD
+[0.4.0]: https://github.com/tweag/rules_sh/compare/v0.3.0...v0.4.0
 
 ### Added
 
