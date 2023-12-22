@@ -15,7 +15,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   `sh_binaries`.
   See [PR #34][#34].
 
+- Add support for Bazel 6 and 7
+  See [PR #35][#35] & [PR #43][#43].
+
+- Allow disabling the local posix toolchain under bzlmod
+  See [PR #50][#50]
+
+### Changed
+
+- Mark stardoc as a dev_dependency
+  See [PR #52][#52]
+
 [#34]: https://github.com/tweag/rules_sh/issues/34
+[#35]: https://github.com/tweag/rules_sh/issues/35
+[#43]: https://github.com/tweag/rules_sh/issues/43
+[#50]: https://github.com/tweag/rules_sh/issues/50
+[#52]: https://github.com/tweag/rules_sh/issues/52
 
 ## [0.3.0] - 2022-07-19
 
