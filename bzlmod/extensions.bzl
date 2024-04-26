@@ -64,7 +64,7 @@ def _sh_configure_impl(module_ctx):
     http_file(
         name = "rules_sh_shim_exe",
         sha256 = "cb440b8a08a2095a59666a859b35aa5a1524b140b909ecc760f38f3baccf80e6",
-        urls = ["https://github.com/ScoopInstaller/Shim/releases/download/v1.0.1/shim.exe"],
+        urls = ["https://github.com/ScoopInstaller/Shim/releases/download/v1.1.0/shim.exe"],
         downloaded_file_path = "shim.exe",
         executable = True,
     )
