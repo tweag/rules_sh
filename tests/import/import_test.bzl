@@ -9,7 +9,7 @@ def _create_shim_test():
         srcs = ["create_shim_test.sh"],
         deps = ["@bazel_tools//tools/bash/runfiles"],
         data = [
-            "@rules_sh_shim_exe//file:shim.exe",
+            "@rules_sh_shim_exe//:shim.exe",
             "@rules_sh_import_test_create_shim_test_source//:empty.exe",
             "@rules_sh_import_test_create_shim_test_shim//:shimmed.exe",
             "@rules_sh_import_test_create_shim_test_shim//:shimmed.shim",
@@ -17,7 +17,7 @@ def _create_shim_test():
             "@rules_sh_import_test_create_shim_test_shim//prefix:another.shim",
         ],
         args = [
-            "rules_sh_tests/$(rootpath @rules_sh_shim_exe//file:shim.exe)",
+            "rules_sh_tests/$(rootpath @rules_sh_shim_exe//:shim.exe)",
             "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_source//:empty.exe)",
             "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.exe)",
             "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.shim)",

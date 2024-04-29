@@ -18,7 +18,7 @@ def _copy_file(repository_ctx, *, source, destination, executable):
         legacy_utf8 = False,
     )
 
-def create_shim(repository_ctx, *, name, target, shim_exe = Label("@rules_sh_shim_exe//file:shim.exe")):
+def create_shim(repository_ctx, *, name, target, shim_exe = Label("@rules_sh_shim_exe//:shim.exe")):
     """Create a binary shim for the given target.
 
     Creates a copy of the [shim binary][shim-binary] named `<name>.exe` with a

@@ -43,10 +43,9 @@ def rules_sh_dependencies():
         ],
     )
     maybe(
-        http_file,
+        http_archive,
         name = "rules_sh_shim_exe",
-        sha256 = "cb440b8a08a2095a59666a859b35aa5a1524b140b909ecc760f38f3baccf80e6",
-        urls = ["https://github.com/ScoopInstaller/Shim/releases/download/v1.1.0/shim.exe"],
-        downloaded_file_path = "shim.exe",
-        executable = True,
+        sha256 = "c8452b3c4b8c219edef150cc423b0c844cb2d46381266011f6f076301e7e65d9",
+        urls = ["https://github.com/ScoopInstaller/Shim/releases/download/v1.1.0/shim-1.1.0.zip"],
+        build_file_content = """exports_files(["shim.exe"])""",
     )
