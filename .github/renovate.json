@@ -3,6 +3,5 @@
         "github>tweag/renovate-presets:ruleset_base",
         "github>tweag/renovate-presets:mergify"
     ],
-    "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-    "platform": "github"
+    "gitAuthor": "Renovate Bot <bot@renovateapp.com>"
 }
