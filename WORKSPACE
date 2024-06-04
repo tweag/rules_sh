@@ -8,9 +8,9 @@ load("//sh:posix.bzl", "sh_posix_configure")
 
 sh_posix_configure()
 
-load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
-register_unittest_toolchains()
+bazel_skylib_workspace()
 
 # documentation dependencies
 
