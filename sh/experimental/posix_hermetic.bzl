@@ -6,7 +6,6 @@ less hermetic version of the POSIX toolchain.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@bazel_tools//tools/cpp:lib_cc_configure.bzl", "get_cpu_value")
 load("//sh/private:posix.bzl", _commands = "commands")
 load("//sh:posix.bzl", "MAKE_VARIABLES", "TOOLCHAIN_TYPE")
 load("//sh:sh.bzl", "ShBinariesInfo")

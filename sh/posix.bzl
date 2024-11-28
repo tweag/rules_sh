@@ -8,7 +8,7 @@ available in `posix.commands`.
 """
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@bazel_tools//tools/cpp:lib_cc_configure.bzl", "get_cpu_value")
+load("//sh/private:get_cpu_value.bzl", "get_cpu_value")
 load(
     "//sh/private:defs.bzl",
     "mk_default_info_with_files_to_run",
