@@ -1,3 +1,14 @@
+# Compatibility options (per bazel version)
+common:bazel8 --noincompatible_disallow_ctx_resolve_tools
+
+common:bazel7 --config=common
+
+common:bazel6 --config=common
+
+common:bazel5 --config=common
+
+common:common --noverbose_failures
+
 # Remote Cache Configuration
 build:remote-cache --bes_results_url=https://app.buildbuddy.io/invocation/
 build:remote-cache --bes_backend=grpcs://remote.buildbuddy.io
