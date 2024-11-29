@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0]
+
+[0.5.0]: https://github.com/tweag/rules_sh/compare/v0.4.0...v0.5.0
+
+### Changed
+
+- Add support for Bazel 8.
+  See [PR #91][#91]
+
+[#91]: https://github.com/tweag/rules_sh/pull/91
+
 ## [0.4.0]
 
 [0.4.0]: https://github.com/tweag/rules_sh/compare/v0.3.0...v0.4.0
