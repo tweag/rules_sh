@@ -1,5 +1,5 @@
-load("@bazel_tools//tools/cpp:lib_cc_configure.bzl", "get_cpu_value")
 load("@rules_sh//sh:import.bzl", "create_shim")
+load(":get_cpu_value.bzl", "get_cpu_value")
 
 # create shim ########################################################
 

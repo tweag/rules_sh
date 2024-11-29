@@ -14,6 +14,7 @@ bzl_library(
     name = "defs",
     srcs = [
         "defs.bzl",
+        "get_cpu_value.bzl",
     ],
     deps = [
         "@bazel_skylib//lib:dicts",

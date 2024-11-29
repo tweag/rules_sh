@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+bazel_version=$(
+    "${BAZEL_REAL}" --version | (
+        read -r -a v
+        echo "${v[1]}"
+    )
+)
+
+# enable config per each major version, i.e. bazel6, bazel7, bazel8, ...
+config="--config=bazel${bazel_version%%.*}"
+
+declare -a startup_options=()
+
+while [ "$#" -gt 0 ]; do
+    option="$1"
+    if [[ "$option" = -* ]]; then
+        startup_options+=( "$option" )
+        shift
+    else
+        break
+    fi
+done
+
+command=$1 ; shift
+
+# N.B. using a default value if unset for `startup_options` is needed for compatiblity with Bash 3
+#      which treats an empty array as unset
+exec "$BAZEL_REAL" "${startup_options[@]-}" "$command" "$config" "$@"
