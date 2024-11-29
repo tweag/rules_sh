@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TAG=$1
+TAG="$1"
+
+REPO="${GITHUB_REPOSITORY#*/}"
+
 # The prefix is chosen to match what GitHub generates for source archives
-PREFIX=${GITHUB_REPOSITORY}${TAG:1}
-ARCHIVE="${GITHUB_REPOSITORY}${TAG:1}.tar.gz"
+PREFIX="${REPO}${TAG:1}"
+ARCHIVE="${REPO}${TAG:1}.tar.gz"
+
 git archive --format=tar.gz --prefix="${PREFIX}/" -o $ARCHIVE HEAD
+
 SHA=$(shasum -a 256 "$ARCHIVE" | awk '{print $1}')
 
 cat << EOF
