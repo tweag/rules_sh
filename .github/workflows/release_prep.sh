@@ -6,7 +6,7 @@ TAG="$1"
 REPO="${GITHUB_REPOSITORY#*/}"
 
 # The prefix is chosen to match what GitHub generates for source archives
-PREFIX="${REPO}${TAG:1}"
+PREFIX="${REPO}-${TAG:1}"
 ARCHIVE="${REPO}-${TAG:1}.tar.gz"
 
 git archive --format=tar.gz --prefix="${PREFIX}/" -o $ARCHIVE HEAD
