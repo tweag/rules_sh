@@ -26,4 +26,6 @@ done
 
 command=$1 ; shift
 
-exec "$BAZEL_REAL" "${startup_options[@]}" "$command" "$config" "$@"
+# N.B. using a default value if unset for `startup_options` is needed for compatiblity with Bash 3
+#      which treats an empty array as unset
+exec "$BAZEL_REAL" "${startup_options[@]-}" "$command" "$config" "$@"
