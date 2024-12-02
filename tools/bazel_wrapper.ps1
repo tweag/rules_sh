@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 $bazel_version = & $Env:BAZEL_REAL --version | ForEach-Object { ($_ -split ' ')[1] }
 
 # Construct the config flag based on the major version
-$config = "--config=bazel$($bazel_version -split '\.' | Select-Object -First 1)"
+$config = "--config=bazel7" # BISECT
 
 # Initialize an array for startup options
 $startup_options = @()
