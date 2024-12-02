@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         bazel_mode: [workspace, module]
-        version: ["6.4.0", "7.0.0", "8.0.0"]
+        version: ["6.5.0", "7.0.0", "8.0.0"]
     defaults:
       run:
         shell: bash
