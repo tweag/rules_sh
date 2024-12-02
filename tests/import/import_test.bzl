@@ -1,5 +1,5 @@
 load("@rules_sh//sh:import.bzl", "create_shim")
-load(":get_cpu_value.bzl", "get_cpu_value")
+load("@rules_sh//sh/private:get_cpu_value.bzl", "get_cpu_value")
 
 # create shim ########################################################
 
