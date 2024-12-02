@@ -22,4 +22,6 @@ if [[ -n "${working_dir:-}" ]]; then
   cd "${working_dir}"
 fi
 
-bazelisk --bisect=7.2.1..7.3.0 test "${bzl_pkgs}"
+USE_BAZEL_VERSION=7.2.1 bazelisk test  --build_tests_only "${bzl_pkgs}"
+
+USE_BAZEL_VERSION=7.3.0 bazelisk test  --build_tests_only "${bzl_pkgs}"
