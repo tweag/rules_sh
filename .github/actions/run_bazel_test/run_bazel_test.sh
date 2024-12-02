@@ -28,7 +28,7 @@ git remote add origin https://github.com/bazelbuild/bazel.git
 git fetch origin 282ac623df3523e2e31a2de9c002e5c50da19fec
 git reset --hard FETCH_HEAD
 
-bazel build //src:bazel-dev.exe
+bazel build ///src:bazel-dev.exe
 
 bazel-bin/src/bazel-dev.exe --batch version
 
