@@ -24,34 +24,13 @@ fi
 
 mkdir bazel ; cd bazel
 git init
-git add remote origin https://github.com/bazelbuild/bazel.git
+git remote add origin https://github.com/bazelbuild/bazel.git
 git fetch origin 282ac623df3523e2e31a2de9c002e5c50da19fec
 git reset --hard FETCH_HEAD
 
+bazel build //src:bazel-dev.exe
 
-sudo sudo apt-get update
-sudo apt-get install -y \
-      build-essential \
-      openjdk-11-jdk \
-      python3 \
-      zip \
-      unzip \
-      curl \
-      libssl-dev \
-      libncurses5-dev \
-      libncursesw5-dev \
-      libreadline-dev \
-      libsqlite3-dev \
-      libgdbm-dev \
-      libdb5.3-dev \
-      libbz2-dev \
-      libexpat1-dev \
-      liblzma-dev \
-      zlib1g-dev
-
-./compile.sh
-
-output/bazel --batch version
+bazel-bin/src/bazel-dev.exe --batch version
 
 cd ..
 
@@ -71,4 +50,6 @@ cd ..
 # - 867cfe48f6fb4c7644f3d22ae12dcd7974566eca
 # - acc1ff6eaad9fffb40dbdada089052fa80a28b29
 # - 5f5355b75c7c93fba1e15f6658f308953f4baf51
-bazelisk --bisect=867cfe48f6fb4c7644f3d22ae12dcd7974566eca..7.3.0 test  --build_tests_only "${bzl_pkgs}"
+#bazelisk --bisect=867cfe48f6fb4c7644f3d22ae12dcd7974566eca..7.3.0 test  --build_tests_only "${bzl_pkgs}"
+
+bazel/bazel-bin/src/bazel-dev.exe test  --build_tests_only "${bzl_pkgs}"
