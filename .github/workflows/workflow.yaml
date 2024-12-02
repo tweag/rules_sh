@@ -50,7 +50,7 @@ jobs:
         with:
           content: build --experimental_enable_bzlmod
       - name: Run Bazel test under the tests directory
-        run: |-
-          cd tests
-          bazelisk --bisect=7.2.1..7.3.0 test ...
+        uses: ./.github/actions/run_bazel_test
+        with:
+          working-directory: tests
 

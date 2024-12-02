@@ -22,4 +22,4 @@ if [[ -n "${working_dir:-}" ]]; then
   cd "${working_dir}"
 fi
 
-bazel test "${bzl_pkgs}"
+bazelisk --bisect=7.2.1..7.3.0 test "${bzl_pkgs}"
