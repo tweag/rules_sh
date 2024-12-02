@@ -1,6 +1,7 @@
 # Exit immediately if a command fails, if a variable is used without being defined, or if a pipeline fails
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
 
 # Get the Bazel version
 $bazel_version = & $Env:BAZEL_REAL --version | ForEach-Object { ($_ -split ' ')[1] }
