@@ -5,8 +5,6 @@ common:bazel7 --config=common
 
 common:bazel6 --config=common
 
-common:bazel5 --config=common
-
 common:common --noverbose_failures
 
 # Remote Cache Configuration
