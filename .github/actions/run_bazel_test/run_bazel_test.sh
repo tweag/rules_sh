@@ -32,4 +32,5 @@ fi
 # - 610fe7bb25c8853fd9b55d85cb08d2bf4e3ee8b7
 
 # failed (no binary): 282ac623df3523e2e31a2de9c002e5c50da19fec
-bazelisk --bisect=ffe1df57c3ccbbff815df0068634b881da8c1501..7.3.0 test  --build_tests_only "${bzl_pkgs}"
+# failed (no binary): ffe1df57c3ccbbff815df0068634b881da8c1501
+bazelisk --bisect=867cfe48f6fb4c7644f3d22ae12dcd7974566eca..7.3.0 test  --build_tests_only "${bzl_pkgs}"
