@@ -1,7 +1,6 @@
 name: Continuous integration
 on:
   push:
-    branches: master
   pull_request:
     branches: master
   workflow_dispatch: # allows manual triggering
@@ -14,25 +13,12 @@ concurrency:
 
 jobs:
   build-and-test:
-    name: Build & Test
+    name: Bisect
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
         bazel_mode: [workspace, module]
-        version: ["5.4.1", "6.4.0", "7.0.0", "8.0.0rc6"]
-        include:
-          # Bazel 5.4.1 does not find Visual Studio on windows-2022. So, we 
-          # test it on windows-2019.
-          - version: 5.4.1
-            bazel_mode: workspace
-            os: windows-2019
-        exclude:
-          - version: 5.4.1
-            bazel_mode: module
-          # Bazel 5.4.1 does not find Visual Studio on windows-2022.
-          - version: 5.4.1
-            os: windows-latest
     defaults:
       run:
         shell: bash
@@ -63,24 +49,8 @@ jobs:
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
           content: build --experimental_enable_bzlmod
-      - name: Configure the Bazel version
-        run: |
-          echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc
-          echo "USE_BAZEL_VERSION=${{ matrix.version }}" > tests/.bazeliskrc
-      - name: Run Bazel test at the root
-        if: ${{ matrix.bazel_mode == 'workspace' && runner.os != 'Windows' }}
-        uses: ./.github/actions/run_bazel_test
       - name: Run Bazel test under the tests directory
-        uses: ./.github/actions/run_bazel_test
-        with:
-          working-directory: tests
+        run: |-
+          cd tests
+          bazelisk --bisect=7.2.1..7.3.0 test ...
 
-  all_ci_tests:
-    runs-on: ubuntu-latest
-    needs:
-      - build-and-test
-    if: ${{ always() }}
-    steps:
-      - uses: cgrindel/gha_join_jobs@794a2d117251f22607f1aab937d3fd3eaaf9a2f5 # v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
