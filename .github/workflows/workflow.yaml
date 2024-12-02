@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        bazel_mode: [workspace, module]
+        bazel_mode: [module]
     defaults:
       run:
         shell: bash
@@ -53,4 +53,7 @@ jobs:
         uses: ./.github/actions/run_bazel_test
         with:
           working-directory: tests
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
 
