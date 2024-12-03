@@ -28,7 +28,11 @@ git remote add origin https://github.com/bazelbuild/bazel.git
 git fetch origin 282ac623df3523e2e31a2de9c002e5c50da19fec
 git reset --hard FETCH_HEAD
 
-bazel build ///src:bazel-dev.exe
+pacman -S patch zip unzip
+
+export JAVA_HOME="$JAVA_HOME_21_X64"
+
+bazel build ///src:bazel-dev.exe --stamp --embed_label=7.2.9
 
 bazel-bin/src/bazel-dev.exe --batch version
 
