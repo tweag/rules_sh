@@ -19,10 +19,15 @@ jobs:
       matrix:
         os: [windows-latest]
         bazel_mode: [module]
+        bazel:
+          - 7.2.1
+          - 7.3.0
     defaults:
       run:
         shell: bash
     runs-on: ${{ matrix.os }}
+    env:
+      USE_BAZEL_VERSION: ${{ matrix.bazel }}
     steps:
       - uses: actions/checkout@v4
       - uses: tweag/configure-bazel-remote-cache-auth@v0

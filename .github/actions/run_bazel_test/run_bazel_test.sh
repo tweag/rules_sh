@@ -22,21 +22,6 @@ if [[ -n "${working_dir:-}" ]]; then
   cd "${working_dir}"
 fi
 
-mkdir bazel ; cd bazel
-git init
-git remote add origin https://github.com/bazelbuild/bazel.git
-git fetch origin 282ac623df3523e2e31a2de9c002e5c50da19fec
-git reset --hard FETCH_HEAD
-
-pacman -S patch zip unzip
-
-export JAVA_HOME="$JAVA_HOME_21_X64"
-
-bazel build ///src:bazel-dev.exe --stamp --embed_label=7.2.9
-
-bazel-bin/src/bazel-dev.exe --batch version
-
-cd ..
 
 #USE_BAZEL_VERSION=7.2.1 bazelisk test  --build_tests_only "${bzl_pkgs}"
 
@@ -54,6 +39,11 @@ cd ..
 # - 867cfe48f6fb4c7644f3d22ae12dcd7974566eca
 # - acc1ff6eaad9fffb40dbdada089052fa80a28b29
 # - 5f5355b75c7c93fba1e15f6658f308953f4baf51
+#
+# BAD: 282ac623df3523e2e31a2de9c002e5c50da19fec
+
 #bazelisk --bisect=867cfe48f6fb4c7644f3d22ae12dcd7974566eca..7.3.0 test  --build_tests_only "${bzl_pkgs}"
 
-bazel/bazel-bin/src/bazel-dev.exe test  --build_tests_only "${bzl_pkgs}"
+bazel version
+bazel info release
+bazelisk build "//sh_binaries:genrule"
