@@ -571,29 +571,11 @@ def _test_genrule():
         ],
         cmd = """\
 $(GENRULE_BUNDLE_HELLO_WORLD) >$(execpath genrule_output_world)
-
-IS_WINDOWS=
-case "$$OSTYPE" in
-  cygwin|msys|win32) IS_WINDOWS=1;;
-esac
-
-with_runfiles() {
-  # The explicit RUNFILES_DIR|RUNFILES_MANIFEST_FILE is a workaround for
-  # https://github.com/bazelbuild/bazel/issues/15486
-  if [[ -n $$IS_WINDOWS ]]; then
-    RUNFILES_MANIFEST_FILE=$(execpath :genrule_bundle).runfiles_manifest \\
-      eval "$$@"
-  else
-    RUNFILES_DIR=$(execpath :genrule_bundle).runfiles \\
-      eval "$$@"
-  fi
-}
-
-with_runfiles $(GENRULE_BUNDLE_HELLO_DATA) >$(execpath genrule_output_data)
+$(GENRULE_BUNDLE_HELLO_DATA) >$(execpath genrule_output_data)
 
 PATH="$(_GENRULE_BUNDLE_PATH):$$PATH"
 hello_world >$(execpath genrule_output_by_path)
-with_runfiles hello_data >>$(execpath genrule_output_by_path)
+hello_data >>$(execpath genrule_output_by_path)
 """,
         toolchains = [":genrule_bundle"],
     )
