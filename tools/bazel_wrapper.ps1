@@ -24,8 +24,16 @@ while ($args.Count -gt 0) {
 }
 
 # Get the command and remaining arguments
-$command = $args[0]
-$args = $args[1..$($args.Count - 1)]
+if ($args.Count -gt 0) {
+    $command = $args[0]
+    if ($args.Count -gt 1) {
+        $args = $args[1..($args.Count - 1)]
+    } else {
+        $args = @()
+    }
+} else {
+    $args = @()
+}
 
 # Execute Bazel with the collected options and arguments
 & $Env:BAZEL_REAL @startup_options $command $config @args
