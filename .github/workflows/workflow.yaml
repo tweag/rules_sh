@@ -20,8 +20,8 @@ jobs:
         os: [windows-latest]
         bazel_mode: [module]
         bazel:
-          - 7.2.1
-          - 7.3.0
+          - '0fa02b949593cce25c6c03689a7db3868c595310'
+          - '610fe7bb25c8853fd9b55d85cb08d2bf4e3ee8b7'
     defaults:
       run:
         shell: bash
