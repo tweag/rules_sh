@@ -46,4 +46,4 @@ fi
 
 bazel version
 bazel info release
-bazelisk build "//sh_binaries:genrule"
+bazelisk build "sh_binaries:genrule"
