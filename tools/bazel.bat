@@ -7,6 +7,9 @@ if errorlevel 1 (
    exit /b 1
 )
 
+# disable POSIX-to-Windows path conversion for MINGW / MSYS2
+set MSYS_NO_PATHCONV=1
+
 :: Call the Bash wrapper
 bash --noprofile --norc -o errexit -o nounset -o pipefail "%~dp0bazel" %*
 
