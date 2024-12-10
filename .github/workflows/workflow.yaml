@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         bazel_mode: [workspace, module]
-        version: ["5.4.1", "6.4.0", "7.0.0", "8.0.0rc6"]
+        version: ["5.4.1", "6.4.0", "7.0.0", "8.0.0"]
         include:
           # Bazel 5.4.1 does not find Visual Studio on windows-2022. So, we 
           # test it on windows-2019.
@@ -82,5 +82,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - uses: cgrindel/gha_join_jobs@794a2d117251f22607f1aab937d3fd3eaaf9a2f5 # v1
+        env:
+          USE_BAZEL_VERSION: '7.x'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

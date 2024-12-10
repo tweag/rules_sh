@@ -17,12 +17,12 @@ def _create_shim_test():
             "@rules_sh_import_test_create_shim_test_shim//prefix:another.shim",
         ],
         args = [
-            "rules_sh_tests/$(rootpath @rules_sh_shim_exe//:shim.exe)",
-            "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_source//:empty.exe)",
-            "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.exe)",
-            "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//:shimmed.shim)",
-            "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.exe)",
-            "rules_sh_tests/$(rootpath @rules_sh_import_test_create_shim_test_shim//prefix:another.shim)",
+            "$(rlocationpath @rules_sh_shim_exe//:shim.exe)",
+            "$(rlocationpath @rules_sh_import_test_create_shim_test_source//:empty.exe)",
+            "$(rlocationpath @rules_sh_import_test_create_shim_test_shim//:shimmed.exe)",
+            "$(rlocationpath @rules_sh_import_test_create_shim_test_shim//:shimmed.shim)",
+            "$(rlocationpath @rules_sh_import_test_create_shim_test_shim//prefix:another.exe)",
+            "$(rlocationpath @rules_sh_import_test_create_shim_test_shim//prefix:another.shim)",
         ],
     )
 
