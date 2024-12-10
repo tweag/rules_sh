@@ -82,5 +82,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - uses: cgrindel/gha_join_jobs@794a2d117251f22607f1aab937d3fd3eaaf9a2f5 # v1
+        env:
+          USE_BAZEL_VERSION: '7.x'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
