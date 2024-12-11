@@ -17,7 +17,37 @@ ShBinariesInfo = provider(
 
 _WINDOWS_EXE_EXTENSIONS = [".exe", ".cmd", ".bat", ".ps1"]
 
-def _sh_binaries_from_srcs(ctx, srcs, is_windows):
+_POSIX_WRAPPER_TEMPLATE = """\
+#!/bin/sh
+if [[ -z ${{RUNFILES_MANIFEST_FILE+x}} && -z ${{RUNFILES_DIR+x}} ]]; then
+    if [[ -f "{main_executable}.runfiles_manifest" ]]; then
+    export RUNFILES_MANIFEST_FILE="{main_executable}.runfiles_manifest"
+    elif [[ -d "{main_executable}.runfiles" ]]; then
+    export RUNFILES_DIR="{main_executable}.runfiles"
+    else
+    echo "ERROR: Runfiles not found for bundle {main_executable}" >&2
+    exit 1
+    fi
+fi
+exec "{original_executable}" "$@"
+"""
+
+_WINDOWS_WRAPPER_TEMPLATE = """\
+@echo off
+if not defined RUNFILES_MANIFEST_FILE if not defined RUNFILES_DIR (
+    if exist "{main_executable}.runfiles_manifest" (
+        set RUNFILES_MANIFEST_FILE="{main_executable}.runfiles_manifest"
+    ) else if exist "{main_executable}.runfiles" (
+        set RUNFILES_DIR="{main_executable}.runfiles"
+    ) else (
+        echo ERROR: Runfiles not found for bundle {main_executable} >&2
+        exit /b 1
+    )
+)
+"{original_executable}" %*
+"""
+
+def _sh_binaries_from_srcs(ctx, srcs, is_windows, main_executable):
     executable_files = []
     runfiles = ctx.runfiles()
     executables_dict = dict()
@@ -27,10 +57,10 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
         if src[DefaultInfo].files_to_run == None or src[DefaultInfo].files_to_run.executable == None:
             fail("srcs must be executable, but '{}' is not.".format(src.label))
 
-        executable = src[DefaultInfo].files_to_run.executable
-        name = executable.basename
+        original_executable = src[DefaultInfo].files_to_run.executable
+        name = original_executable.basename
         if is_windows:
-            (noext, ext) = paths.split_extension(executable.basename)
+            (noext, ext) = paths.split_extension(original_executable.basename)
             if ext in _WINDOWS_EXE_EXTENSIONS:
                 name = noext
 
@@ -41,8 +71,21 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
                 src.label,
             ))
 
+        if src[DefaultInfo].default_runfiles:
+            executable = ctx.actions.declare_file(ctx.label.name + ".path/" + (name + ".bat" if is_windows else name))
+            ctx.actions.write(
+                executable,
+                (_WINDOWS_WRAPPER_TEMPLATE if is_windows else _POSIX_WRAPPER_TEMPLATE).format(
+                    main_executable = main_executable.path,
+                    original_executable = original_executable.path,
+                ),
+                is_executable = True,
+            )
+            executable_files.append(original_executable)
+            runfiles = runfiles.merge(src[DefaultInfo].default_runfiles)
+        else:
+            executable = original_executable
         executable_files.append(executable)
-        runfiles = runfiles.merge(src[DefaultInfo].default_runfiles)
         executables_dict[name] = executable
         executable_paths.append(executable.dirname)
 
@@ -64,6 +107,9 @@ def _sh_binaries_from_deps(ctx, deps):
             fail("deps must be sh_binaries targets, but '{}' is not.".format(dep.label))
 
         executable_files.append(dep[DefaultInfo].files)
+        # TODO: Handle tools with runfiles in deps correctly. They need to be wrapped in a new
+        # wrapper script as in _sh_binaries_from_srcs since the dummy executable they reference
+        # is no longer the sibling of the runfiles tree.
         runfiles = runfiles.merge(dep[DefaultInfo].default_runfiles)
         executables_dict.update(dep[ShBinariesInfo].executables)
         executable_paths.append(dep[ShBinariesInfo].paths)
@@ -101,7 +147,8 @@ def _mk_sh_binaries_info(direct, transitive):
 
 def _sh_binaries_impl(ctx):
     is_windows = ctx.attr._is_windows[ConstantInfo].value
-    direct = _sh_binaries_from_srcs(ctx, ctx.attr.srcs, is_windows)
+    executable = ctx.actions.declare_file(ctx.label.name)
+    direct = _sh_binaries_from_srcs(ctx, ctx.attr.srcs, is_windows, executable)
     transitive = _sh_binaries_from_deps(ctx, ctx.attr.deps)
     data_runfiles = _runfiles_from_data(ctx, ctx.attr.data)
 
@@ -109,7 +156,7 @@ def _sh_binaries_impl(ctx):
     template_variable_info = mk_template_variable_info(ctx.label.name, sh_binaries_info)
     default_info = mk_default_info_with_files_to_run(
         ctx,
-        ctx.label.name,
+        executable,
         depset(direct = direct.executable_files, transitive = transitive.executable_files),
         direct.runfiles.merge(transitive.runfiles).merge(data_runfiles),
     )
@@ -283,58 +330,5 @@ def _custom_rule_impl(ctx):
         ...
     )
 ```
-
-*Caveat: Using Binaries that require Runfiles*
-
-Note, support for binaries that require runfiles is limited due to limitations
-imposed by Bazel's Starlark API, see [#15486][issue-15486]. In order for these
-to work you will need to define the `RUNFILES_DIR` or `RUNFILES_MANIFEST_FILE`
-environment variables for the action using tools from the bundle.
-
-(Use `RUNFILES_MANIFEST_FILE` if your operating system and configuration does
-not support a runfiles tree and instead only provides a runfiles manifest file,
-as is commonly the case on Windows.)
-
-You can achieve this in a `genrule` as follows:
-
-```bzl
-genrule(
-    name = "runfiles-genrule",
-    toolchains = [":a-bundle"],
-    cmd = "\\n".join([
-        # The explicit RUNFILES_DIR/RUNFILES_MANIFEST_FILE is a workaround for
-        # https://github.com/bazelbuild/bazel/issues/15486
-        "RUNFILES_DIR=$(execpath :a-bundle).runfiles",
-        "RUNFILES_MANIFEST_FILE=$(execpath :a-bundle).runfiles_manifest",
-        "$(A_BUNDLE_BINARY_A)",
-        "$(A_BUNDLE_BINARY_B)",
-    ]),
-    outs = [...],
-)
-```
-
-And in a custom rule as follows:
-
-```bzl
-def _custom_rule_impl(ctx):
-    tools = ctx.attr.tools[ShBinariesInfo]
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
-    # The explicit RUNFILES_DIR/RUNFILES_MANIFEST_FILE is a workaround for
-    # https://github.com/bazelbuild/bazel/issues/15486
-    tools_env = {
-        "RUNFILES_DIR": ctx.attr.tools[DefaultInfo].files_to_run.runfiles_manifest.dirname,
-        "RUNFILES_MANIFEST_FILE": ctx.attr.tools[DefaultInfo].files_to_run.runfiles_manifest.path,
-    }
-
-    ctx.actions.run(
-        executable = tools.executables["binary-a"],
-        env = tools_env, # Pass the environment into the action.
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
-        ...
-    )
-```
-
-[issue-15486]: https://github.com/bazelbuild/bazel/issues/15486
 """,
 )

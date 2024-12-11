@@ -77,9 +77,10 @@ def _sh_posix_make_variables_impl(ctx):
         toolchain.sh_binaries_info,
     )
 
+    executable = ctx.actions.declare_file(ctx.label.name)
     default_info = mk_default_info_with_files_to_run(
         ctx,
-        ctx.label.name,
+        executable,
         toolchain.tool[DefaultInfo].files,
         toolchain.tool[DefaultInfo].default_runfiles,
     )
