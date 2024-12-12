@@ -608,8 +608,6 @@ def _test_runfiles_toolchain():
 def _runfiles_custom_rule_impl(ctx):
     toolchain = ctx.toolchains["@rules_sh//sh/posix:toolchain_type"]
 
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [toolchain.tool])
-
     # Override the argv[0] relative runfiles tree or manifest by the bundle's.
     # This is a workaround for https://github.com/bazelbuild/bazel/issues/15486
     tools_env = {
@@ -620,11 +618,9 @@ def _runfiles_custom_rule_impl(ctx):
     output = ctx.actions.declare_file("{}.txt".format(ctx.label.name))
     ctx.actions.run_shell(
         outputs = [output],
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
         env = tools_env,
         tools = [
-            toolchain.sh_binaries_info.executables["echo"],
+            toolchain.sh_binaries_info.files_to_run["echo"],
         ],
         arguments = [
             toolchain.sh_binaries_info.executables["echo"].path,

@@ -1,5 +1,5 @@
 # Compatibility options (per bazel version)
-common:bazel8 --noincompatible_disallow_ctx_resolve_tools
+common:bazel8 --config=common
 
 common:bazel7 --config=common
 
