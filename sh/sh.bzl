@@ -11,6 +11,7 @@ ShBinariesInfo = provider(
     doc = "The description of a sh_binaries target.",
     fields = {
         "executables": "dict of File, The executables included in the bundle by name.",
+        "files_to_run": "dict of FilesToRunProvider, to be passed to ctx.action.run / ctx.action.run_shell.",
         "paths": "depset of string, The directories under which the binaries can be found.",
     },
 )
@@ -21,13 +22,15 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
     executable_files = []
     runfiles = ctx.runfiles()
     executables_dict = dict()
+    files_to_run_dict = dict()
     executable_paths = []
 
     for src in srcs:
         if src[DefaultInfo].files_to_run == None or src[DefaultInfo].files_to_run.executable == None:
             fail("srcs must be executable, but '{}' is not.".format(src.label))
 
-        executable = src[DefaultInfo].files_to_run.executable
+        files_to_run = src[DefaultInfo].files_to_run
+        executable = files_to_run.executable
         name = executable.basename
         if is_windows:
             (noext, ext) = paths.split_extension(executable.basename)
@@ -44,6 +47,7 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
         executable_files.append(executable)
         runfiles = runfiles.merge(src[DefaultInfo].default_runfiles)
         executables_dict[name] = executable
+        files_to_run_dict[name] = files_to_run
         executable_paths.append(executable.dirname)
 
     return struct(
@@ -51,11 +55,13 @@ def _sh_binaries_from_srcs(ctx, srcs, is_windows):
         runfiles = runfiles,
         executables_dict = executables_dict,
         executable_paths = executable_paths,
+        files_to_run_dict = files_to_run_dict,
     )
 
 def _sh_binaries_from_deps(ctx, deps):
     executable_files = []
     runfiles = ctx.runfiles()
+    files_to_run_dict = dict()
     executables_dict = dict()
     executable_paths = []
 
@@ -66,6 +72,7 @@ def _sh_binaries_from_deps(ctx, deps):
         executable_files.append(dep[DefaultInfo].files)
         runfiles = runfiles.merge(dep[DefaultInfo].default_runfiles)
         executables_dict.update(dep[ShBinariesInfo].executables)
+        files_to_run_dict.update(dep[ShBinariesInfo].files_to_run)
         executable_paths.append(dep[ShBinariesInfo].paths)
 
     return struct(
@@ -73,6 +80,7 @@ def _sh_binaries_from_deps(ctx, deps):
         runfiles = runfiles,
         executables_dict = executables_dict,
         executable_paths = executable_paths,
+        files_to_run_dict = files_to_run_dict,
     )
 
 def _runfiles_from_data(ctx, data):
@@ -90,6 +98,11 @@ def _mk_sh_binaries_info(direct, transitive):
             # The order is important so that srcs take precedence over deps on collision.
             transitive.executables_dict,
             direct.executables_dict,
+        ),
+        files_to_run = dicts.add(
+            # The order is important so that srcs take precedence over deps on collision.
+            transitive.files_to_run_dict,
+            direct.files_to_run_dict,
         ),
         paths = depset(
             direct = direct.executable_paths,
@@ -244,13 +257,10 @@ load("@rules_sh//sh:sh.bzl", "ShBinariesInfo")
 
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
 
     # Use binary-a in a `run` action.
     ctx.actions.run(
-        executable = tools.executables["binary-a"], # Invoke binary-a
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
+        executable = tools.files_to_run["binary-a"], # Invoke binary-a
         ...
     )
 
@@ -261,11 +271,9 @@ def _custom_rule_impl(ctx):
             binary_b = tools.executables["binary-b"].path, # Path to binary-b
         ]),
         tools = [
-            tools.executables["binary-a"],
-            tools.executables["binary-b"],
+            tools.files_to_run["binary-a"],
+            tools.files_to_run["binary-b"],
         ],
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
         ...
     )
 
@@ -275,11 +283,9 @@ def _custom_rule_impl(ctx):
             path = ":".join(tools.paths.to_list()),
         ),
         tools = [
-            tools.executables["binary-a"],
-            tools.executables["binary-b"],
+            tools.files_to_run["binary-a"],
+            tools.files_to_run["binary-b"],
         ],
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
         ...
     )
 ```
@@ -318,7 +324,6 @@ And in a custom rule as follows:
 ```bzl
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
     # The explicit RUNFILES_DIR/RUNFILES_MANIFEST_FILE is a workaround for
     # https://github.com/bazelbuild/bazel/issues/15486
     tools_env = {
@@ -327,10 +332,8 @@ def _custom_rule_impl(ctx):
     }
 
     ctx.actions.run(
-        executable = tools.executables["binary-a"],
+        executable = tools.files_to_run["binary-a"],
         env = tools_env, # Pass the environment into the action.
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
         ...
     )
 ```

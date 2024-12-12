@@ -164,13 +164,10 @@ def _custom_rule_impl(ctx):
         "RUNFILES_DIR": toolchain.tool[DefaultInfo].files_to_run.runfiles_manifest.dirname,
         "RUNFILES_MANIFEST_FILE": toolchain.tool[DefaultInfo].files_to_run.runfiles_manifest.path,
     }
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [toolchain.tool])
 
     ctx.actions.run(
-        executable = sh_binaries_info.executables["grep"],
+        executable = sh_binaries_info.files_to_run["grep"],
         env = tools_env, # Pass the environment into the action.
-        inputs = tools_inputs,
-        input_manifests = tools_manifest,
         ...
     )
 ```

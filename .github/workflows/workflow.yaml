@@ -20,19 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         bazel_mode: [workspace, module]
-        version: ["5.4.1", "6.4.0", "7.0.0", "8.0.0"]
-        include:
-          # Bazel 5.4.1 does not find Visual Studio on windows-2022. So, we 
-          # test it on windows-2019.
-          - version: 5.4.1
-            bazel_mode: workspace
-            os: windows-2019
-        exclude:
-          - version: 5.4.1
-            bazel_mode: module
-          # Bazel 5.4.1 does not find Visual Studio on windows-2022.
-          - version: 5.4.1
-            os: windows-latest
+        version: ["6.5.0", "7.4.1", "8.0.0"]
     defaults:
       run:
         shell: bash
@@ -62,7 +50,7 @@ jobs:
         uses: tweag/write-bazelrc@v0
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
-          content: build --experimental_enable_bzlmod
+          content: build --enable_bzlmod
       - name: Configure the Bazel version
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc

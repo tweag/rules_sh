@@ -256,6 +256,12 @@ def _bundle_two_binaries_test_impl(ctx):
         bundle_binaries_info.executables["hello_world"],
     )
 
+    asserts.equals(
+        env,
+        bundle_binaries_info.executables["hello_world"],
+        bundle_binaries_info.files_to_run["hello_world"].executable,
+    )
+
     asserts.true(
         env,
         "hello_data" in bundle_binaries_info.executables,
@@ -266,6 +272,12 @@ def _bundle_two_binaries_test_impl(ctx):
         env,
         ctx.executable.reference_hello_data,
         bundle_binaries_info.executables["hello_data"],
+    )
+
+    asserts.equals(
+        env,
+        bundle_binaries_info.executables["hello_data"],
+        bundle_binaries_info.files_to_run["hello_data"].executable,
     )
 
     asserts.equals(
@@ -380,6 +392,12 @@ def _merge_bundles_test_impl(ctx):
         bundle_binaries_info.executables["hello_world"],
     )
 
+    asserts.equals(
+        env,
+        bundle_binaries_info.executables["hello_world"],
+        bundle_binaries_info.files_to_run["hello_world"].executable,
+    )
+
     asserts.true(
         env,
         "hello_data" in bundle_binaries_info.executables,
@@ -390,6 +408,12 @@ def _merge_bundles_test_impl(ctx):
         env,
         ctx.executable.reference_hello_data,
         bundle_binaries_info.executables["hello_data"],
+    )
+
+    asserts.equals(
+        env,
+        bundle_binaries_info.executables["hello_data"],
+        bundle_binaries_info.files_to_run["hello_data"].executable,
     )
 
     asserts.equals(
@@ -472,7 +496,6 @@ def _test_merge_bundles():
 
 def _custom_rule_impl(ctx):
     tools = ctx.attr.tools[ShBinariesInfo]
-    (tools_inputs, tools_manifest) = ctx.resolve_tools(tools = [ctx.attr.tools])
 
     # Override the argv[0] relative runfiles tree or manifest by the bundle's.
     # This is a workaround for https://github.com/bazelbuild/bazel/issues/15486
@@ -484,22 +507,19 @@ def _custom_rule_impl(ctx):
     output_run = ctx.actions.declare_file("custom_rule_run_output")
     ctx.actions.run(
         outputs = [output_run],
-        inputs = tools_inputs,
-        executable = tools.executables["hello_data"],
+        executable = tools.files_to_run["hello_data"],
         arguments = [output_run.path],
         mnemonic = "RunExecutableWithBundle",
         progress_message = "Running hello_data",
         env = tools_env,
-        input_manifests = tools_manifest,
     )
 
     output_run_shell = ctx.actions.declare_file("custom_rule_run_shell_output")
     ctx.actions.run_shell(
         outputs = [output_run_shell],
-        inputs = tools_inputs,
         tools = [
-            tools.executables["hello_world"],
-            tools.executables["hello_data"],
+            tools.files_to_run["hello_world"],
+            tools.files_to_run["hello_data"],
         ],
         arguments = [
             tools.executables["hello_world"].path,
@@ -510,7 +530,6 @@ def _custom_rule_impl(ctx):
         command = "$1 > $3 && $2 >> $3",
         progress_message = "Running hello_world and hello_data",
         env = tools_env,
-        input_manifests = tools_manifest,
     )
 
     default_info = DefaultInfo(
