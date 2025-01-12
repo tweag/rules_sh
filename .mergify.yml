@@ -1,31 +1,25 @@
 queue_rules:
   - name: default
-    conditions:
-      - 'check-success~=Build & Test \(ubuntu-.*\)'
-      - 'check-success~=Build & Test \(macos-.*\)'
-      - 'check-success~=Build & Test \(windows-.*\)'
- 
-pull_request_rules:
-  - name: automatic merge
-    conditions:
+    queue_conditions:
       - 'check-success~=Build & Test \(ubuntu-.*\)'
       - 'check-success~=Build & Test \(macos-.*\)'
       - 'check-success~=Build & Test \(windows-.*\)'
       - "#approved-reviews-by>=1"
       - "label=merge-queue"
       - "base=master"
-    actions:
-      queue:
-        name: default
-        method: merge
+    merge_conditions:
+      - 'check-success~=Build & Test \(ubuntu-.*\)'
+      - 'check-success~=Build & Test \(macos-.*\)'
+      - 'check-success~=Build & Test \(windows-.*\)'
+    merge_method: merge
 
+pull_request_rules:
   - name: delete head branch after merge
     conditions:
       - merged
       - closed
     actions:
       delete_head_branch: {}
-
   - name: remove from merge-queue after merge
     conditions:
       - merged
@@ -33,3 +27,7 @@ pull_request_rules:
       label:
         remove:
           - "merge-queue"
+  - name: automatic merge
+    conditions: []
+    actions:
+      queue:
