@@ -26,7 +26,7 @@ jobs:
         shell: bash
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: tweag/configure-bazel-remote-cache-auth@v0
         with:
           buildbuddy_api_key: ${{ secrets.BUILDBUDDY_API_KEY }}
