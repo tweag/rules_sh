@@ -26,28 +26,28 @@ jobs:
         shell: bash
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: tweag/configure-bazel-remote-cache-auth@v0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: tweag/configure-bazel-remote-cache-auth@144b0b915f13a418f5eafe2f68d19564ec136c62 # v0.1.1
         with:
           buildbuddy_api_key: ${{ secrets.BUILDBUDDY_API_KEY }}
           bazelrc_path: .bazelrc.auth
-      - uses: extractions/netrc@v2
+      - uses: extractions/netrc@f6f1722d05ce2890aa86fd9654565b1214ac53a4 # v2.0.1
         with:
           machine: api.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure for CI
-        uses: tweag/write-bazelrc@v0
+        uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         with:
           content: build --config=ci
       - name: Disable stardoc
         # Windows: Stardoc complains about docstring quote indentation on Windows.
         # bzlmod: Stardoc does not work with bzlmod.
         if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
-        uses: tweag/write-bazelrc@v0
+        uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         with:
           content: build --config=no-stardoc
       - name: Enable bzlmod
-        uses: tweag/write-bazelrc@v0
+        uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
           content: build --enable_bzlmod
