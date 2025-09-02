@@ -69,7 +69,7 @@ jobs:
       - build-and-test
     if: ${{ always() }}
     steps:
-      - uses: cgrindel/gha_join_jobs@8a9736c29a7e5ebd9f3af2870f59cb6d563b6659 # v1
+      - uses: cgrindel/gha_join_jobs@8a9736c29a7e5ebd9f3af2870f59cb6d563b6659 # v1.4.0
         env:
           USE_BAZEL_VERSION: '7.x'
         with:
