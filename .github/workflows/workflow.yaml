@@ -18,9 +18,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-14, windows-2022]
+        os: [ubuntu-24.04, macos-15, windows-2025]
         bazel_mode: [workspace, module]
-        version: ["6.5.0", "7.4.1", "8.0.0"]
+        version: ["7.7.1", "8.6.0"]
     defaults:
       run:
         shell: bash
@@ -46,11 +46,16 @@ jobs:
         uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         with:
           content: build --config=no-stardoc
-      - name: Enable bzlmod
+      - name: Enable bzlmod & disable workspace
         uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         if: ${{ matrix.bazel_mode == 'module' }}
         with:
-          content: build --enable_bzlmod
+          content: build --enable_bzlmod --noenable_workspace
+      - name: Enable workspace & disable bzlmod 
+        uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
+        if: ${{ matrix.bazel_mode == 'workspace' }}
+        with:
+          content: build --enable_workspace --noenable_bzlmod
       - name: Configure the Bazel version
         run: |
           echo "USE_BAZEL_VERSION=${{ matrix.version }}" > .bazeliskrc

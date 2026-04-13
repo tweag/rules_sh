@@ -9,7 +9,7 @@ bazel_version=$(
     )
 )
 
-# enable config per each major version, i.e. bazel6, bazel7, bazel8, ...
+# enable config per each major version, i.e. bazel7, bazel8, ...
 config="--config=bazel${bazel_version%%.*}"
 
 declare -a args=()
