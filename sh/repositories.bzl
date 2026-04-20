@@ -26,6 +26,13 @@ def rules_sh_dependencies():
     """
     maybe(
         http_archive,
+        name = "rules_shell",
+        sha256 = "20721f63908879c083f94869e618ea8d4ff5edb91ff9a72a2ebee357fdbc352d",
+        strip_prefix = "rules_shell-0.8.0",
+        url = "https://github.com/bazelbuild/rules_shell/releases/download/v0.8.0/rules_shell-v0.8.0.tar.gz",
+    )
+    maybe(
+        http_archive,
         name = "rules_cc",
         sha256 = "bbf1ae2f83305b7053b11e4467d317a7ba3517a12cef608543c1b1c5bf48a4df",
         strip_prefix = "rules_cc-0.0.16",
