@@ -12,6 +12,14 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
+
+load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
+
+rules_java_dependencies()
+
 # documentation dependencies
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
