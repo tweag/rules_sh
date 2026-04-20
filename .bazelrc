@@ -1,9 +1,9 @@
 # Compatibility options (per bazel version)
+common:bazel9 --config=common
+
 common:bazel8 --config=common
 
 common:bazel7 --config=common
-
-common:bazel6 --config=common
 
 common:common --noverbose_failures
 
