@@ -4,6 +4,10 @@ load("//sh:repositories.bzl", "rules_sh_dependencies")
 
 rules_sh_dependencies()
 
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
 load("//sh:posix.bzl", "sh_posix_configure")
 
 sh_posix_configure()
@@ -20,6 +24,10 @@ load("@rules_java//java:rules_java_deps.bzl", "rules_java_dependencies")
 
 rules_java_dependencies()
 
+load("@rules_cc//cc:extensions.bzl", "compatibility_proxy_repo")
+
+compatibility_proxy_repo()
+
 # documentation dependencies
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
@@ -35,7 +43,6 @@ maybe(
         "https://github.com/bazelbuild/stardoc/releases/download/0.6.2/stardoc-0.6.2.tar.gz",
     ],
 )
-
 
 load("@io_bazel_stardoc//:setup.bzl", "stardoc_repositories")
 
