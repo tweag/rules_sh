@@ -44,10 +44,10 @@ def rules_sh_dependencies():
     maybe(
         http_archive,
         name = "bazel_features",
-        sha256 = "497a10560c07b0478026f49766ebdb6fd07b4fba9767db4f1c25cb6ab2fa1cdb",
-        strip_prefix = "bazel_features-1.46.0",
+        sha256 = "5f7f87f50584df12bbfe5e461d358b16a8e15d245a7e596011bf39aaee5f58a9",
+        strip_prefix = "bazel_features-1.47.0",
         urls = [
-            "https://github.com/bazel-contrib/bazel_features/releases/download/v1.46.0/bazel_features-v1.46.0.tar.gz",
+            "https://github.com/bazel-contrib/bazel_features/releases/download/v1.47.0/bazel_features-v1.47.0.tar.gz",
         ],
     )
     maybe(
