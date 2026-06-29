@@ -53,10 +53,10 @@ def rules_sh_dependencies():
     maybe(
         http_archive,
         name = "com_google_protobuf",
-        sha256 = "877bf9f880631aa31daf2c09896276985696728137fcd43cc534a28c5566d9ba",
-        strip_prefix = "protobuf-29.6",
+        sha256 = "f0b6838e7522a8da96126d487068c959bc624926368f3024ac8fd03abd0a1ac4",
+        strip_prefix = "protobuf-35.1",
         urls = [
-            "https://github.com/protocolbuffers/protobuf/releases/download/v29.6/protobuf-29.6.tar.gz",
+            "https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protobuf-35.1.tar.gz",
         ],
     )
     maybe(
