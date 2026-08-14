@@ -62,10 +62,10 @@ def rules_sh_dependencies():
     maybe(
         http_archive,
         name = "rules_python",
-        sha256 = "5453dafcb177e886961cd1ec9812972316db4beca5ca379916a627732d4b7d11",
-        strip_prefix = "rules_python-2.1.0",
+        sha256 = "678358df0f4ae7f00a33ce33cced97c301f3c523bdd71cb2573d20a93efbf6c6",
+        strip_prefix = "rules_python-2.3.1",
         urls = [
-            "https://github.com/bazelbuild/rules_python/releases/download/2.1.0/rules_python-2.1.0.tar.gz",
+            "https://github.com/bazelbuild/rules_python/releases/download/2.3.1/rules_python-2.3.1.tar.gz",
         ],
     )
     maybe(
