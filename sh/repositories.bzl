@@ -71,9 +71,9 @@ def rules_sh_dependencies():
     maybe(
         http_archive,
         name = "rules_java",
-        sha256 = "9de4e178c2c4f98d32aafe5194c3f2b717ae10405caa11bdcb460ac2a6f61516",
+        sha256 = "88537048d7d07589ff4939c99889300c7063e43480ddd3cfa94d6c2cc899aa2e",
         urls = [
-            "https://github.com/bazelbuild/rules_java/releases/download/9.6.1/rules_java-9.6.1.tar.gz",
+            "https://github.com/bazelbuild/rules_java/releases/download/9.8.0/rules_java-9.8.0.tar.gz",
         ],
     )
     maybe(
