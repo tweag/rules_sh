@@ -5,7 +5,12 @@ common:bazel8 --config=common
 
 common:bazel7 --config=common
 
-common:common --noverbose_failures
+common:common --enable_platform_specific_config
+
+# enable C++ 17 for MSVC on Windows, gcc/clang on Linux
+build:windows --host_cxxopt=/std:c++17
+build:linux --host_cxxopt=-std=c++17
+build:macos --host_cxxopt=-std=c++17
 
 # Remote Cache Configuration
 build:remote-cache --bes_results_url=https://app.buildbuddy.io/invocation/
