@@ -69,6 +69,8 @@ jobs:
         uses: ./.github/actions/run_bazel_test
         with:
           working-directory: tests
+      - name: Ensure update-readme works
+        run: bazel run //sh/docs:update-readme
 
   all_ci_tests:
     runs-on: ubuntu-latest
