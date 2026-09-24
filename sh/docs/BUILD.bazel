@@ -43,7 +43,7 @@ write_file(
     name = "write-copy-readme-sh",
     out = "copy-readme.sh",
     content = ["""
-        "$POSIX_CP" -v --no-preserve=all "$1" "$BUILD_WORKSPACE_DIRECTORY/README.md"
+        "$POSIX_CP" -v "$1" "$BUILD_WORKSPACE_DIRECTORY/README.md"
     """],
     tags = ["stardoc_generation"],
 )
