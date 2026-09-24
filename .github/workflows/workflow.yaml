@@ -41,13 +41,13 @@ jobs:
         uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         with:
           content: build --config=ci
-      - name: Disable stardoc
-        # Windows: Stardoc complains about docstring quote indentation on Windows.
-        # bzlmod: Stardoc does not work with bzlmod.
-        if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
-        uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
-        with:
-          content: build --config=no-stardoc
+      # - name: Disable stardoc
+      #   # Windows: Stardoc complains about docstring quote indentation on Windows.
+      #   # bzlmod: Stardoc does not work with bzlmod.
+      #   if: ${{ runner.os == 'Windows' || matrix.bazel_mode == 'module' }}
+      #   uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
+      #   with:
+      #     content: build --config=no-stardoc
       - name: Enable bzlmod & disable workspace
         uses: tweag/write-bazelrc@b1f117f25f2042ecdc708026eadd23bf825bc98a # v0.1.1
         if: ${{ matrix.bazel_mode == 'module' }}
