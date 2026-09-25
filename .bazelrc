@@ -12,6 +12,9 @@ build:windows --host_cxxopt=/std:c++17
 build:linux --host_cxxopt=-std=c++17
 build:macos --host_cxxopt=-std=c++17
 
+# enable runfiles on Windows
+build:windows --enable_runfiles
+
 # Remote Cache Configuration
 build:remote-cache --bes_results_url=https://app.buildbuddy.io/invocation/
 build:remote-cache --bes_backend=grpcs://remote.buildbuddy.io
