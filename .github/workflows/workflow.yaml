@@ -70,7 +70,9 @@ jobs:
         with:
           working-directory: tests
       - name: Ensure update-readme works
-        run: bazel run //sh/docs:update-readme
+        if: ${{ !startsWith(matrix.os, 'windows') || !startsWith(matrix.version, '7') }}
+        run: |
+          ${{ case(startsWith(matrix.os, 'windows'), 'BAZEL_SH=C:/msys64/usr/bin/bash.exe', '') }} bazel run //sh/docs:update-readme
 
   all_ci_tests:
     runs-on: ubuntu-latest
