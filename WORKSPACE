@@ -8,6 +8,10 @@ load("@bazel_features//:deps.bzl", "bazel_features_deps")
 
 bazel_features_deps()
 
+load("@rules_shell//shell:repositories.bzl", "rules_shell_dependencies", "rules_shell_toolchains")
+rules_shell_dependencies()
+rules_shell_toolchains()
+
 load("//sh:posix.bzl", "sh_posix_configure")
 
 sh_posix_configure()
