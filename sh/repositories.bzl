@@ -34,11 +34,11 @@ def rules_sh_dependencies():
     maybe(
         http_archive,
         name = "rules_cc",
-        sha256 = "81c10a95a5c22d838276ee90d712635d6042419fdfca5ef88328226b6321e53b",
-        strip_prefix = "rules_cc-0.2.22",
+        sha256 = "0c51346fe5e7d2ee0b64a66623df0753bbb365877e6f85b8590e8de70448633e",
+        strip_prefix = "rules_cc-0.2.28",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_cc/releases/download/0.2.22/rules_cc-0.2.22.tar.gz",
-            "https://github.com/bazelbuild/rules_cc/releases/download/0.2.22/rules_cc-0.2.22.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_cc/releases/download/0.2.28/rules_cc-0.2.28.tar.gz",
+            "https://github.com/bazelbuild/rules_cc/releases/download/0.2.28/rules_cc-0.2.28.tar.gz",
         ],
     )
     maybe(
